@@ -91,6 +91,7 @@
         .nav-toggle {
             display: none; cursor: pointer; z-index: 101;
             width: 36px; height: 36px; position: relative;
+            border: 0; background: transparent;
         }
         .nav-toggle span {
             display: block; position: absolute; height: 2px; width: 22px;
@@ -253,7 +254,8 @@
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
         .hero-portrait {
-            width: 100%; height: 100%; object-fit: cover;
+            width: 100%; height: 100%;
+            object-fit: contain; object-position: center bottom;
             transition: transform 0.6s var(--ease);
         }
         .hero-portrait-wrapper:hover .hero-portrait { transform: scale(1.05); }
@@ -383,6 +385,21 @@
             font-family: 'Helvetica Neue', sans-serif; background: var(--bg-card);
         }
         .tag:hover { border-color: var(--accent); color: var(--hero-dark); transform: translateY(-2px); }
+        .personality-proof {
+            display: inline-flex; align-items: center; gap: 10px;
+            margin-top: 18px; padding: 9px 14px;
+            border: 1px solid var(--border); border-radius: 24px;
+            background: var(--bg-card); color: var(--text-secondary);
+            font: inherit; font-size: 0.78rem; cursor: pointer;
+            transition: all 0.3s var(--ease);
+        }
+        .personality-proof:hover, .personality-proof:focus-visible {
+            border-color: var(--accent); color: var(--hero-dark);
+            transform: translateY(-2px); outline: none;
+        }
+        .personality-proof img {
+            width: 34px; height: 34px; border-radius: 50%; object-fit: cover;
+        }
 
         /* Stats */
         .stats { display: flex; justify-content: center; gap: 90px; flex-wrap: wrap; }
@@ -649,6 +666,14 @@
             width: 100%; max-height: 560px; object-fit: contain; background: var(--bg-soft);
             transition: transform 0.4s var(--ease);
         }
+        .carousel-placeholder {
+            min-height: 360px; display: grid; place-items: center;
+            background:
+                linear-gradient(135deg, rgba(212,160,23,0.08), rgba(154,27,30,0.08)),
+                repeating-linear-gradient(45deg, transparent 0 18px, rgba(212,160,23,0.06) 18px 19px);
+            color: var(--text-muted); cursor: default;
+            font-size: 1rem; letter-spacing: 4px;
+        }
         .carousel-slide:hover .carousel-img { transform: scale(1.02); }
         .carousel-info {
             position: absolute; bottom: 0; left: 0; right: 0;
@@ -834,10 +859,14 @@
                 width: 70%; height: 100vh;
                 background: var(--bg); flex-direction: column;
                 padding: 80px 30px 30px; gap: 0;
-                transition: right 0.4s var(--ease);
+                visibility: hidden; pointer-events: none;
+                transition: right 0.4s var(--ease), visibility 0s linear 0.4s;
                 box-shadow: -4px 0 30px rgba(0,0,0,0.08);
             }
-            .nav-links.open { right: 0; }
+            .nav-links.open {
+                right: 0; visibility: visible; pointer-events: auto;
+                transition: right 0.4s var(--ease), visibility 0s;
+            }
             .nav-links li { width: 100%; border-bottom: 1px solid var(--border); }
             .nav-links a { display: block; padding: 16px 0; font-size: 0.95rem; }
             .nav-links a::after { display: none; }
@@ -1045,7 +1074,7 @@
             <li><a href="#philosophy">个人理念</a></li>
             <li><a href="#timeline">成长历程</a></li>
         </ul>
-        <div class="nav-toggle" id="navToggle"><span></span><span></span><span></span></div>
+        <button class="nav-toggle" id="navToggle" type="button" aria-label="打开导航菜单" aria-controls="navLinks" aria-expanded="false"><span></span><span></span><span></span></button>
     </nav>
 
     <!-- Hero -->
@@ -1121,6 +1150,10 @@
                     <span class="tag">好创意大赛</span>
                     <span class="tag">华灿杯</span>
                 </div>
+                <button class="personality-proof" type="button" onclick="openLightbox('personality-istp-t.jpg', '16Personalities 测试结果 · ISTP-T 鉴赏家')">
+                    <img src="personality-istp-t.jpg" alt="" aria-hidden="true">
+                    查看 ISTP-T 人格测试结果
+                </button>
             </div>
         </div>
     </section>
@@ -1196,7 +1229,7 @@
         <h2 class="section-title reveal">我的<span class="accent">作品</span></h2>
         <p class="section-subtitle reveal">精选设计作品，点击查看详情</p>
         <div class="works-grid">
-            <div class="work-card reveal" onclick="openWorkDetail(0)">
+            <div class="work-card reveal" role="button" tabindex="0" onclick="openWorkDetail(0)" onkeydown="handleWorkCardKey(event, 0)">
                 <div class="work-thumb work-thumb-1">
                     <span class="work-emoji">💡</span>
                 </div>
@@ -1212,7 +1245,7 @@
                 </div>
                 <div class="work-arrow">→</div>
             </div>
-            <div class="work-card reveal reveal-delay-1" onclick="openWorkDetail(1)">
+            <div class="work-card reveal reveal-delay-1" role="button" tabindex="0" onclick="openWorkDetail(1)" onkeydown="handleWorkCardKey(event, 1)">
                 <div class="work-thumb work-thumb-2">
                     <span class="work-emoji">🍵</span>
                 </div>
@@ -1228,7 +1261,7 @@
                 </div>
                 <div class="work-arrow">→</div>
             </div>
-            <div class="work-card reveal reveal-delay-2" onclick="openWorkDetail(2)">
+            <div class="work-card reveal reveal-delay-2" role="button" tabindex="0" onclick="openWorkDetail(2)" onkeydown="handleWorkCardKey(event, 2)">
                 <div class="work-thumb work-thumb-3">
                     <span class="work-emoji">♿</span>
                 </div>
@@ -1244,7 +1277,7 @@
                 </div>
                 <div class="work-arrow">→</div>
             </div>
-            <div class="work-card reveal" onclick="openWorkDetail(3)">
+            <div class="work-card reveal" role="button" tabindex="0" onclick="openWorkDetail(3)" onkeydown="handleWorkCardKey(event, 3)">
                 <div class="work-thumb work-thumb-4">
                     <span class="work-emoji">🥽</span>
                 </div>
@@ -1260,7 +1293,7 @@
                 </div>
                 <div class="work-arrow">→</div>
             </div>
-            <div class="work-card reveal reveal-delay-1" onclick="openWorkDetail(4)">
+            <div class="work-card reveal reveal-delay-1" role="button" tabindex="0" onclick="openWorkDetail(4)" onkeydown="handleWorkCardKey(event, 4)">
                 <div class="work-thumb work-thumb-5">
                     <span class="work-emoji">🤖</span>
                 </div>
@@ -1276,7 +1309,7 @@
                 </div>
                 <div class="work-arrow">→</div>
             </div>
-            <div class="work-card reveal reveal-delay-2" onclick="openWorkDetail(5)">
+            <div class="work-card reveal reveal-delay-2" role="button" tabindex="0" onclick="openWorkDetail(5)" onkeydown="handleWorkCardKey(event, 5)">
                 <div class="work-thumb work-thumb-6">
                     <span class="work-emoji">🚁</span>
                 </div>
@@ -1292,7 +1325,7 @@
                 </div>
                 <div class="work-arrow">→</div>
             </div>
-            <div class="work-card reveal" onclick="openWorkDetail(6)">
+            <div class="work-card reveal" role="button" tabindex="0" onclick="openWorkDetail(6)" onkeydown="handleWorkCardKey(event, 6)">
                 <div class="work-thumb work-thumb-7">
                     <span class="work-emoji">🌲</span>
                 </div>
@@ -1316,219 +1349,19 @@
         <div class="section-label reveal visible">AWARDS &amp; HONORS</div>
         <h2 class="section-title reveal visible">荣誉<span class="accent">奖项</span></h2>
         <div class="carousel-wrapper reveal visible">
-            <button class="carousel-btn prev" onclick="carouselMove(-1)">‹</button>
+            <button class="carousel-btn prev" type="button" aria-label="上一项荣誉" onclick="carouselMove(-1)">‹</button>
             <div class="carousel-viewport">
-                <div class="carousel-track" id="carouselTrack"><div class="carousel-slide">
-                <img src="微信图片_20260903141318_250_1.jpg" alt="友发奖学金" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_250_1.jpg', '友发奖学金 — 2024-2025学年 · 天津仁爱学院')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>友发奖学金</h3>
-                        <p>2024-2025学年 · 天津仁爱学院</p>
-                    </div>
-                    <span class="carousel-badge gold">奖学金</span>
-                </div></div><div class="carousel-slide">
-                <img src="微信图片_20260903141318_251_1.jpg" alt="优秀班干部" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_251_1.jpg', '优秀班干部 — 2024-2025学年 · 天津仁爱学院')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>优秀班干部</h3>
-                        <p>2024-2025学年 · 天津仁爱学院</p>
-                    </div>
-                    <span class="carousel-badge ">校级</span>
-                </div></div><div class="carousel-slide">
-                <img src="微信图片_20260903141318_253_1.jpg" alt="优秀团干部" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_253_1.jpg', '优秀团干部 — 2025年5月 · 五四共青团表彰')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>优秀团干部</h3>
-                        <p>2025年5月 · 五四共青团表彰</p>
-                    </div>
-                    <span class="carousel-badge ">团组织</span>
-                </div></div><div class="carousel-slide">
-                <img src="微信图片_20260903141318_255_1.jpg" alt="国青杯艺术设计一等奖" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_255_1.jpg', '国青杯艺术设计一等奖 — 作品《多功能阅读台灯》· 智能产品设计')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>国青杯艺术设计一等奖</h3>
-                        <p>作品《多功能阅读台灯》· 智能产品设计</p>
-                    </div>
-                    <span class="carousel-badge gold">一等奖</span>
-                </div></div><div class="carousel-slide">
-                <img src="微信图片_20260903141318_256_1.jpg" alt="文化强国杯文学知识挑战赛一等奖" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_256_1.jpg', '文化强国杯文学知识挑战赛一等奖 — 2025年 · 全国高校文学知识挑战赛')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>文化强国杯文学知识挑战赛一等奖</h3>
-                        <p>2025年 · 全国高校文学知识挑战赛</p>
-                    </div>
-                    <span class="carousel-badge gold">一等奖</span>
-                </div></div><div class="carousel-slide">
-                <img src="微信图片_20260903141318_261_1.jpg" alt="人工智能+创新创业大赛一等奖" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_261_1.jpg', '人工智能+创新创业大赛一等奖 — 2025年 · 全国大学生创新创业大赛初赛')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>人工智能+创新创业大赛一等奖</h3>
-                        <p>2025年 · 全国大学生创新创业大赛初赛</p>
-                    </div>
-                    <span class="carousel-badge gold">一等奖</span>
-                </div></div><div class="carousel-slide">
-                <img src="微信图片_20260903141318_258_1.jpg" alt="杰出青年" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_258_1.jpg', '杰出青年 — 强国复兴有我 全国青年爱国宣传志愿行动')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>杰出青年</h3>
-                        <p>"强国复兴有我"全国青年爱国宣传志愿行动</p>
-                    </div>
-                    <span class="carousel-badge ">称号</span>
-                </div></div><div class="carousel-slide">
-                <img src="微信图片_20260903141318_254_1.jpg" alt="COP28全球青年零碳未来行动" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_254_1.jpg', 'COP28全球青年零碳未来行动 — 参与宣传工作 · 贡献青年力量')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>COP28全球青年零碳未来行动</h3>
-                        <p>参与宣传工作 · 贡献青年力量</p>
-                    </div>
-                    <span class="carousel-badge ">国际</span>
-                </div></div><div class="carousel-slide">
-                <img src="微信图片_20260903141318_260_1.jpg" alt="大熊猫守护计划" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_260_1.jpg', '大熊猫守护计划 — 全国高校公益项目 · 积极参与无私奉献')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>大熊猫守护计划</h3>
-                        <p>全国高校公益项目 · 积极参与无私奉献</p>
-                    </div>
-                    <span class="carousel-badge ">公益</span>
-                </div></div><div class="carousel-slide">
-                <img src="微信图片_20260903141318_252_1.jpg" alt="新媒体宣传组成员" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_252_1.jpg', '新媒体宣传组成员 — 智能交互专业 · 数智传媒与设计艺术学院')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>新媒体宣传组成员</h3>
-                        <p>智能交互专业 · 数智传媒与设计艺术学院</p>
-                    </div>
-                    <span class="carousel-badge ">聘书</span>
-                </div></div><div class="carousel-slide">
-                <img src="微信图片_20260903141318_257_1.jpg" alt="社会实践活动证书" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_257_1.jpg', '社会实践活动证书 — 文化强国杯 · 社会实践参与认证')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>社会实践活动证书</h3>
-                        <p>文化强国杯 · 社会实践参与认证</p>
-                    </div>
-                    <span class="carousel-badge ">实践</span>
-                </div></div><div class="carousel-slide">
-                <img src="微信图片_20260903141318_259_1.jpg" alt="荣誉证书" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_259_1.jpg', '荣誉证书 — 强国复兴有我 · 成绩优异表现突出')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>荣誉证书</h3>
-                        <p>"强国复兴有我" · 成绩优异表现突出</p>
-                    </div>
-                    <span class="carousel-badge ">荣誉</span>
-                </div></div><div class="carousel-slide">
-                <img src="微信图片_20260903141318_250_1.jpg" alt="友发奖学金" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_250_1.jpg', '友发奖学金 — 2024-2025学年 · 天津仁爱学院')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>友发奖学金</h3>
-                        <p>2024-2025学年 · 天津仁爱学院</p>
-                    </div>
-                    <span class="carousel-badge gold">奖学金</span>
-                </div></div><div class="carousel-slide">
-                <img src="微信图片_20260903141318_251_1.jpg" alt="优秀班干部" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_251_1.jpg', '优秀班干部 — 2024-2025学年 · 天津仁爱学院')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>优秀班干部</h3>
-                        <p>2024-2025学年 · 天津仁爱学院</p>
-                    </div>
-                    <span class="carousel-badge ">校级</span>
-                </div></div><div class="carousel-slide">
-                <img src="微信图片_20260903141318_253_1.jpg" alt="优秀团干部" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_253_1.jpg', '优秀团干部 — 2025年5月 · 五四共青团表彰')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>优秀团干部</h3>
-                        <p>2025年5月 · 五四共青团表彰</p>
-                    </div>
-                    <span class="carousel-badge ">团组织</span>
-                </div></div><div class="carousel-slide">
-                <img src="微信图片_20260903141318_255_1.jpg" alt="国青杯艺术设计一等奖" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_255_1.jpg', '国青杯艺术设计一等奖 — 作品《多功能阅读台灯》· 智能产品设计')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>国青杯艺术设计一等奖</h3>
-                        <p>作品《多功能阅读台灯》· 智能产品设计</p>
-                    </div>
-                    <span class="carousel-badge gold">一等奖</span>
-                </div></div><div class="carousel-slide">
-                <img src="微信图片_20260903141318_256_1.jpg" alt="文化强国杯文学知识挑战赛一等奖" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_256_1.jpg', '文化强国杯文学知识挑战赛一等奖 — 2025年 · 全国高校文学知识挑战赛')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>文化强国杯文学知识挑战赛一等奖</h3>
-                        <p>2025年 · 全国高校文学知识挑战赛</p>
-                    </div>
-                    <span class="carousel-badge gold">一等奖</span>
-                </div></div><div class="carousel-slide">
-                <img src="微信图片_20260903141318_261_1.jpg" alt="人工智能+创新创业大赛一等奖" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_261_1.jpg', '人工智能+创新创业大赛一等奖 — 2025年 · 全国大学生创新创业大赛初赛')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>人工智能+创新创业大赛一等奖</h3>
-                        <p>2025年 · 全国大学生创新创业大赛初赛</p>
-                    </div>
-                    <span class="carousel-badge gold">一等奖</span>
-                </div></div><div class="carousel-slide">
-                <img src="好创意证书.jpg" alt="好创意大赛二等奖" class="carousel-img" onclick="openLightbox('好创意证书.jpg', '好创意大赛二等奖 — 基于心流理论的沉浸式乐器陪练系统设计 · AI情感陪伴装置类 · 第20届天津赛区')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>好创意大赛二等奖</h3>
-                        <p>基于心流理论的沉浸式乐器陪练系统设计 · AI情感陪伴装置类 · 第20届天津赛区</p>
-                    </div>
-                    <span class="carousel-badge ">二等奖</span>
-                </div></div><div class="carousel-slide">
-                <img src="微信图片_20260903141318_258_1.jpg" alt="杰出青年" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_258_1.jpg', '杰出青年 — 强国复兴有我 全国青年爱国宣传志愿行动')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>杰出青年</h3>
-                        <p>"强国复兴有我"全国青年爱国宣传志愿行动</p>
-                    </div>
-                    <span class="carousel-badge ">称号</span>
-                </div></div><div class="carousel-slide">
-                <img src="微信图片_20260903141318_254_1.jpg" alt="COP28全球青年零碳未来行动" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_254_1.jpg', 'COP28全球青年零碳未来行动 — 参与宣传工作 · 贡献青年力量')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>COP28全球青年零碳未来行动</h3>
-                        <p>参与宣传工作 · 贡献青年力量</p>
-                    </div>
-                    <span class="carousel-badge ">国际</span>
-                </div></div><div class="carousel-slide">
-                <img src="微信图片_20260903141318_260_1.jpg" alt="大熊猫守护计划" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_260_1.jpg', '大熊猫守护计划 — 全国高校公益项目 · 积极参与无私奉献')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>大熊猫守护计划</h3>
-                        <p>全国高校公益项目 · 积极参与无私奉献</p>
-                    </div>
-                    <span class="carousel-badge ">公益</span>
-                </div></div><div class="carousel-slide">
-                <img src="微信图片_20260903141318_252_1.jpg" alt="新媒体宣传组成员" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_252_1.jpg', '新媒体宣传组成员 — 智能交互专业 · 数智传媒与设计艺术学院')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>新媒体宣传组成员</h3>
-                        <p>智能交互专业 · 数智传媒与设计艺术学院</p>
-                    </div>
-                    <span class="carousel-badge ">聘书</span>
-                </div></div><div class="carousel-slide">
-                <img src="微信图片_20260903141318_257_1.jpg" alt="社会实践活动证书" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_257_1.jpg', '社会实践活动证书 — 文化强国杯 · 社会实践参与认证')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>社会实践活动证书</h3>
-                        <p>文化强国杯 · 社会实践参与认证</p>
-                    </div>
-                    <span class="carousel-badge ">实践</span>
-                </div></div><div class="carousel-slide">
-                <img src="微信图片_20260903141318_259_1.jpg" alt="荣誉证书" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_259_1.jpg', '荣誉证书 — 强国复兴有我 · 成绩优异表现突出')">
-                <div class="carousel-info">
-                    <div class="carousel-text">
-                        <h3>荣誉证书</h3>
-                        <p>"强国复兴有我" · 成绩优异表现突出</p>
-                    </div>
-                    <span class="carousel-badge ">荣誉</span>
-                </div></div></div>
+                <div class="carousel-track" id="carouselTrack"></div>
             </div>
-            <button class="carousel-btn next" onclick="carouselMove(1)">›</button>
-            <div class="carousel-dots" id="carouselDots"><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot active"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div></div>
+            <button class="carousel-btn next" type="button" aria-label="下一项荣誉" onclick="carouselMove(1)">›</button>
+            <div class="carousel-dots" id="carouselDots"></div>
         </div>
     </section>
 
     <!-- Work Detail Overlay -->
-    <div class="work-detail-overlay" id="workDetailOverlay">
+    <div class="work-detail-overlay" id="workDetailOverlay" role="dialog" aria-modal="true" aria-labelledby="workDetailTitle" aria-hidden="true">
         <div class="work-detail-container" id="workDetailContainer">
-            <button class="work-detail-close" onclick="closeWorkDetail()">×</button>
+            <button class="work-detail-close" type="button" aria-label="关闭作品详情" onclick="closeWorkDetail()">×</button>
             <div class="work-detail-hero" id="workDetailHero">
                 <span class="work-detail-hero-emoji" id="workDetailHeroEmoji">💡</span>
             </div>
@@ -1565,7 +1398,7 @@
 
     <!-- Lightbox -->
     <div class="lightbox" id="lightbox">
-        <button class="lightbox-close" id="lightboxClose">×</button>
+        <button class="lightbox-close" id="lightboxClose" type="button" aria-label="关闭图片预览">×</button>
         <img class="lightbox-content" id="lightboxImg" src="" alt="">
         <div class="lightbox-caption" id="lightboxCaption"></div>
     </div>
@@ -1688,16 +1521,44 @@
         // Mobile Nav Toggle
         const navToggle = document.getElementById('navToggle');
         const navLinks = document.getElementById('navLinks');
+        const mobileNavQuery = window.matchMedia('(max-width: 768px)');
+
+        function setNavOpen(isOpen, restoreFocus = false) {
+            navLinks.classList.toggle('open', isOpen);
+            navToggle.classList.toggle('active', isOpen);
+            navToggle.setAttribute('aria-expanded', String(isOpen));
+            navToggle.setAttribute('aria-label', isOpen ? '关闭导航菜单' : '打开导航菜单');
+            navLinks.inert = !isOpen;
+            if (isOpen) {
+                navLinks.querySelector('a').focus();
+            } else if (restoreFocus) {
+                navToggle.focus();
+            }
+        }
+
+        function syncNavMode() {
+            if (mobileNavQuery.matches) {
+                setNavOpen(navLinks.classList.contains('open'));
+            } else {
+                navLinks.classList.remove('open');
+                navLinks.inert = false;
+                navToggle.classList.remove('active');
+                navToggle.setAttribute('aria-expanded', 'false');
+                navToggle.setAttribute('aria-label', '打开导航菜单');
+            }
+        }
+
         navToggle.addEventListener('click', () => {
-            navToggle.classList.toggle('active');
-            navLinks.classList.toggle('open');
+            const isOpen = navLinks.classList.toggle('open');
+            setNavOpen(isOpen);
         });
         navLinks.querySelectorAll('a').forEach(a => {
             a.addEventListener('click', () => {
-                navToggle.classList.remove('active');
-                navLinks.classList.remove('open');
+                if (mobileNavQuery.matches) setNavOpen(false);
             });
         });
+        mobileNavQuery.addEventListener('change', syncNavMode);
+        syncNavMode();
 
         // Scroll Progress & Navbar
         const scrollProgress = document.getElementById('scrollProgress');
@@ -1705,7 +1566,8 @@
         window.addEventListener('scroll', () => {
             const scrollTop = window.scrollY;
             const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            scrollProgress.style.width = (scrollTop / docHeight) * 100 + '%';
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            scrollProgress.style.width = Math.min(100, Math.max(0, progress)) + '%';
             if (scrollTop > 60) {
                 navbar.classList.add('scrolled');
                 navToggle.classList.remove('dark');
@@ -1812,7 +1674,7 @@
         });
 
         // ========== 3D Tilt on Project Cards ==========
-        document.querySelectorAll('.project-card').forEach(card => {
+        document.querySelectorAll('.work-card').forEach(card => {
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
                 const x = e.clientX - rect.left;
@@ -1853,20 +1715,20 @@
 
         // ========== Awards Carousel ==========
         const awards = [
-            { img: '微信图片_20260903141318_250_1.jpg', title: '友发奖学金', desc: '2024-2025学年 · 天津仁爱学院', badge: '奖学金', gold: true },
-            { img: '微信图片_20260903141318_251_1.jpg', title: '优秀班干部', desc: '2024-2025学年 · 天津仁爱学院', badge: '校级', gold: false },
-            { img: '微信图片_20260903141318_253_1.jpg', title: '优秀团干部', desc: '2025年5月 · 五四共青团表彰', badge: '团组织', gold: false },
-            { img: '微信图片_20260903141318_255_1.jpg', title: '国青杯艺术设计一等奖', desc: '作品《多功能阅读台灯》· 智能产品设计', badge: '一等奖', gold: true },
-            { img: '微信图片_20260903141318_256_1.jpg', title: '文化强国杯文学知识挑战赛一等奖', desc: '2025年 · 全国高校文学知识挑战赛', badge: '一等奖', gold: true },
-            { img: '微信图片_20260903141318_261_1.jpg', title: '人工智能+创新创业大赛一等奖', desc: '2025年 · 全国大学生创新创业大赛初赛', badge: '一等奖', gold: true },
-            { img: '好创意证书.jpg', title: '好创意大赛二等奖', desc: '基于心流理论的沉浸式乐器陪练系统设计 · AI情感陪伴装置类 · 第20届天津赛区', badge: '二等奖', gold: false },
-            { img: '微信图片_20260903141318_255_1.jpg', title: '华灿杯设计竞赛', desc: '2025年7月 · 持续在设计赛道探索突破', badge: '竞赛', gold: false },
-            { img: '微信图片_20260903141318_258_1.jpg', title: '杰出青年', desc: '"强国复兴有我"全国青年爱国宣传志愿行动', badge: '称号', gold: false },
-            { img: '微信图片_20260903141318_254_1.jpg', title: 'COP28全球青年零碳未来行动', desc: '参与宣传工作 · 贡献青年力量', badge: '国际', gold: false },
-            { img: '微信图片_20260903141318_260_1.jpg', title: '大熊猫守护计划', desc: '全国高校公益项目 · 积极参与无私奉献', badge: '公益', gold: false },
-            { img: '微信图片_20260903141318_252_1.jpg', title: '新媒体宣传组成员', desc: '智能交互专业 · 数智传媒与设计艺术学院', badge: '聘书', gold: false },
-            { img: '微信图片_20260903141318_257_1.jpg', title: '社会实践活动证书', desc: '文化强国杯 · 社会实践参与认证', badge: '实践', gold: false },
-            { img: '微信图片_20260903141318_259_1.jpg', title: '荣誉证书', desc: '"强国复兴有我" · 成绩优异表现突出', badge: '荣誉', gold: false },
+            { img: 'award-youfa-scholarship.jpg', title: '友发奖学金', desc: '2024-2025学年 · 天津仁爱学院', badge: '奖学金', gold: true },
+            { img: 'award-excellent-class-cadre.jpg', title: '优秀班干部', desc: '2024-2025学年 · 天津仁爱学院', badge: '校级', gold: false },
+            { img: 'award-excellent-league-cadre.jpg', title: '优秀团干部', desc: '2024-2025学年 · 五四共青团表彰', badge: '团组织', gold: false },
+            { img: 'award-guoqing-cup.jpg', title: '国青杯艺术设计一等奖', desc: '作品《多功能阅读台灯》· 智能产品设计', badge: '一等奖', gold: true },
+            { img: 'award-culture-cup.jpg', title: '文化强国杯文学知识挑战赛一等奖', desc: '2025年 · 全国高校文学知识挑战赛', badge: '一等奖', gold: true },
+            { img: 'award-ai-innovation.jpg', title: '人工智能+创新创业大赛一等奖', desc: '2025年 · 全国大学生创新创业大赛初赛', badge: '一等奖', gold: true },
+            { img: 'award-good-design.jpg', title: '好创意大赛二等奖', desc: '基于心流理论的沉浸式乐器陪练系统设计 · AI情感陪伴装置类 · 第20届天津赛区', badge: '二等奖', gold: false },
+            { title: '华灿杯设计竞赛', desc: '2025年7月 · 证书图片待补充', badge: '待补充', gold: false, placeholder: true },
+            { img: 'award-outstanding-youth.jpg', title: '杰出青年', desc: '“强国复兴有我”全国青年爱国宣传志愿行动', badge: '称号', gold: false },
+            { img: 'award-cop28.jpg', title: 'COP28全球青年零碳未来行动', desc: '参与宣传工作 · 贡献青年力量', badge: '国际', gold: false },
+            { img: 'award-panda-protection.jpg', title: '大熊猫守护计划', desc: '全国高校公益项目 · 积极参与无私奉献', badge: '公益', gold: false },
+            { img: 'appointment-new-media.jpg', title: '新媒体宣传组成员', desc: '智能交互专业 · 数智传媒与设计艺术学院', badge: '聘书', gold: false },
+            { img: 'award-social-practice.jpg', title: '社会实践活动证书', desc: '文化强国杯 · 社会实践参与认证', badge: '实践', gold: false },
+            { img: 'award-patriotic-youth.jpg', title: '荣誉证书', desc: '“强国复兴有我” · 成绩优异表现突出', badge: '荣誉', gold: false },
         ];
 
         const track = document.getElementById('carouselTrack');
@@ -1882,8 +1744,11 @@
         awards.forEach((award, i) => {
             const slide = document.createElement('div');
             slide.className = 'carousel-slide';
+            const media = award.placeholder
+                ? `<div class="carousel-img carousel-placeholder" role="img" aria-label="${award.title}证书图片待补充"><span>资料待补充</span></div>`
+                : `<img src="${award.img}" alt="${award.title}" class="carousel-img" loading="lazy">`;
             slide.innerHTML = `
-                <img src="${award.img}" alt="${award.title}" class="carousel-img" onclick="openLightbox('${award.img}', '${award.title} — ${award.desc}')">
+                ${media}
                 <div class="carousel-info">
                     <div class="carousel-text">
                         <h3>${award.title}</h3>
@@ -1892,6 +1757,12 @@
                     <span class="carousel-badge ${award.gold ? 'gold' : ''}">${award.badge}</span>
                 </div>`;
             track.appendChild(slide);
+
+            if (!award.placeholder) {
+                slide.querySelector('img').addEventListener('click', () => {
+                    openLightbox(award.img, `${award.title} — ${award.desc}`);
+                });
+            }
 
             const dot = document.createElement('div');
             dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
@@ -1958,14 +1829,23 @@
         lightboxClose.addEventListener('click', closeLightbox);
         lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
         document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && navLinks.classList.contains('open')) {
+                setNavOpen(false, true);
+                return;
+            }
+            const workOverlay = document.getElementById('workDetailOverlay');
+            if (e.key === 'Tab' && workOverlay.classList.contains('active')) {
+                trapDialogFocus(e, workOverlay);
+                return;
+            }
             if (e.key === 'Escape') {
-                if (document.getElementById('workDetailOverlay').classList.contains('active')) {
+                if (workOverlay.classList.contains('active')) {
                     closeWorkDetail();
                 } else {
                     closeLightbox();
                 }
             }
-            if (document.getElementById('workDetailOverlay').classList.contains('active')) {
+            if (workOverlay.classList.contains('active')) {
                 if (e.key === 'ArrowLeft') navWork(-1);
                 if (e.key === 'ArrowRight') navWork(1);
             } else {
@@ -2028,19 +1908,51 @@
         ];
 
         let currentWorkIndex = 0;
+        let lastWorkTrigger = null;
+
+        function trapDialogFocus(event, dialog) {
+            const focusable = [...dialog.querySelectorAll('button, [href], [tabindex]:not([tabindex="-1"])')]
+                .filter(element => !element.disabled && element.getClientRects().length > 0);
+            if (!focusable.length) return;
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
+            }
+        }
 
         function openWorkDetail(index) {
+            const activeElement = document.activeElement;
+            lastWorkTrigger = activeElement?.classList.contains('work-card')
+                ? activeElement
+                : document.querySelectorAll('.work-card')[index];
             currentWorkIndex = index;
             updateWorkDetail();
             const overlay = document.getElementById('workDetailOverlay');
             overlay.classList.add('active');
+            overlay.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
             document.getElementById('workDetailContainer').scrollTop = 0;
+            overlay.querySelector('.work-detail-close').focus();
+        }
+
+        function handleWorkCardKey(event, index) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                openWorkDetail(index);
+            }
         }
 
         function closeWorkDetail() {
-            document.getElementById('workDetailOverlay').classList.remove('active');
+            const overlay = document.getElementById('workDetailOverlay');
+            overlay.classList.remove('active');
+            overlay.setAttribute('aria-hidden', 'true');
             document.body.style.overflow = '';
+            if (lastWorkTrigger?.isConnected) lastWorkTrigger.focus();
         }
 
         function navWork(dir) {
