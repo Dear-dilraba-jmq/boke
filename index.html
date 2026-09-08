@@ -1,0 +1,2088 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>贾梦晴 | 追光而遇</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #faf5ea;
+            --bg-card: #ffffff;
+            --bg-soft: #f0e8d6;
+            --hero-dark: #9a1b1e;
+            --hero-darker: #6b0f12;
+            --hero-light: #c4262b;
+            --accent: #d4a017;
+            --accent-bright: #f0c040;
+            --accent-warm: #d4a574;
+            --accent-dim: rgba(212,160,23,0.2);
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #888888;
+            --text-cream: #fff8e7;
+            --text-gold: #d4a017;
+            --border: rgba(26,26,26,0.08);
+            --ease: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Georgia', 'Songti SC', 'STSong', serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Scroll Progress */
+        .scroll-progress {
+            position: fixed; top: 0; left: 0;
+            height: 2px; width: 0%;
+            background: linear-gradient(90deg, var(--hero-dark), var(--accent));
+            z-index: 10000; transition: width 0.1s linear;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            z-index: 100; padding: 16px 64px;
+            display: flex; justify-content: space-between; align-items: center;
+            transition: all 0.4s var(--ease);
+        }
+        nav.scrolled {
+            background: rgba(250,245,234,0.92);
+            backdrop-filter: blur(16px);
+            padding: 10px 50px;
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-brand { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .nav-logo-box {
+            width: 32px; height: 32px;
+            background: var(--hero-dark);
+            border-radius: 4px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--accent-bright); font-size: 1rem; font-weight: bold;
+            transition: transform 0.4s var(--ease);
+        }
+        .nav-brand:hover .nav-logo-box { transform: rotate(-8deg) scale(1.1); }
+        .nav-title {
+            font-size: 0.9rem; color: var(--text-primary);
+            letter-spacing: 1px;
+        }
+        .nav-title .sep { color: var(--accent); margin: 0 6px; }
+        .nav-links { display: flex; gap: 30px; list-style: none; }
+        .nav-links a {
+            color: var(--text-secondary); text-decoration: none;
+            font-size: 0.82rem; letter-spacing: 1px; position: relative;
+            transition: color 0.3s; font-family: 'Helvetica Neue', sans-serif;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -4px; left: 0;
+            width: 0; height: 1px; background: var(--accent);
+            transition: width 0.3s var(--ease);
+        }
+        .nav-links a:hover { color: var(--hero-dark); }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* Mobile Menu Toggle */
+        .nav-toggle {
+            display: none; cursor: pointer; z-index: 101;
+            width: 36px; height: 36px; position: relative;
+        }
+        .nav-toggle span {
+            display: block; position: absolute; height: 2px; width: 22px;
+            background: var(--text-primary); border-radius: 2px;
+            left: 7px; transition: all 0.35s var(--ease);
+        }
+        .nav-toggle span:nth-child(1) { top: 10px; }
+        .nav-toggle span:nth-child(2) { top: 17px; }
+        .nav-toggle span:nth-child(3) { top: 24px; }
+        .nav-toggle.active span:nth-child(1) { top: 17px; transform: rotate(45deg); }
+        .nav-toggle.active span:nth-child(2) { opacity: 0; }
+        .nav-toggle.active span:nth-child(3) { top: 17px; transform: rotate(-45deg); }
+        .nav-toggle.dark span { background: var(--text-cream); }
+        nav.scrolled .nav-title { color: var(--text-primary); }
+        nav:not(.scrolled) .nav-title,
+        nav:not(.scrolled) .nav-links a { color: var(--text-cream); }
+        nav:not(.scrolled) .nav-links a:hover { color: var(--accent-bright); }
+        nav:not(.scrolled) .nav-links a::after { background: var(--accent-bright); }
+
+        /* ========== Hero ========== */
+        .hero {
+            height: 100vh; min-height: 600px; position: relative; overflow: hidden;
+            background: linear-gradient(135deg, #1a0a0a 0%, var(--hero-darker) 35%, var(--hero-dark) 65%, var(--hero-light) 100%);
+            display: flex; align-items: center;
+        }
+
+        /* Light Beam */
+        .hero-beam {
+            position: absolute; top: -20%; left: -10%;
+            width: 120%; height: 140%;
+            background: linear-gradient(105deg, transparent 30%, rgba(240,192,64,0.06) 45%, rgba(240,192,64,0.14) 50%, rgba(240,192,64,0.06) 55%, transparent 70%);
+            pointer-events: none;
+            transition: transform 0.6s ease-out;
+        }
+
+        /* Arc Lines */
+        .hero-arcs {
+            position: absolute; inset: 0; pointer-events: none;
+            overflow: hidden;
+        }
+        .arc {
+            position: absolute; border: 1px solid rgba(255,248,231,0.06);
+            border-radius: 50%;
+        }
+        .arc-1 { width: 600px; height: 600px; top: 20%; right: -15%; animation: arcRotate 60s linear infinite; }
+        .arc-2 { width: 400px; height: 400px; top: 30%; right: -5%; animation: arcRotate 40s linear infinite reverse; }
+        .arc-3 { width: 800px; height: 800px; top: 10%; right: -25%; animation: arcRotate 80s linear infinite; }
+        @keyframes arcRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* Hero Layout */
+        .hero-inner {
+            display: flex; align-items: center; justify-content: space-between;
+            width: 100%; max-width: 1400px; margin: 0 auto;
+            padding: 0 80px; position: relative; z-index: 2;
+        }
+
+        /* Hero Left */
+        .hero-left { flex: 1; max-width: 580px; }
+        .hero-tagline {
+            font-size: 0.72rem; color: var(--accent-bright); letter-spacing: 6px;
+            text-transform: uppercase; margin-bottom: 16px;
+            opacity: 0; animation: fadeInLeft 0.9s var(--ease) 0.3s forwards;
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+        .hero-school {
+            font-size: 1rem; color: var(--text-cream); letter-spacing: 2px;
+            margin-bottom: 8px;
+            opacity: 0; animation: fadeInLeft 0.9s var(--ease) 0.45s forwards;
+        }
+        .hero-name {
+            font-size: clamp(2.8rem, 6vw, 4.5rem); font-weight: bold;
+            letter-spacing: 6px; margin-bottom: 16px;
+            color: var(--text-cream);
+            opacity: 0; animation: fadeInLeft 0.9s var(--ease) 0.6s forwards;
+        }
+        .hero-name .gold { color: var(--accent-bright); }
+        .hero-bio {
+            font-size: 0.88rem; color: rgba(255,248,231,0.7); line-height: 1.9;
+            margin-bottom: 8px;
+            opacity: 0; animation: fadeInLeft 0.9s var(--ease) 0.75s forwards;
+        }
+        .hero-motto {
+            font-size: 0.9rem; color: var(--accent-bright); letter-spacing: 2px;
+            font-style: italic; margin-bottom: 24px;
+            opacity: 0; animation: fadeInLeft 0.9s var(--ease) 0.85s forwards;
+        }
+        .hero-tags {
+            display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px;
+            opacity: 0; animation: fadeInLeft 0.9s var(--ease) 0.95s forwards;
+        }
+        .hero-tag {
+            padding: 5px 14px; border: 1px solid rgba(201,168,76,0.3);
+            border-radius: 20px; font-size: 0.72rem; color: var(--accent-bright);
+            font-family: 'Helvetica Neue', sans-serif; letter-spacing: 1px;
+            transition: all 0.3s var(--ease); cursor: default;
+            background: rgba(201,168,76,0.05);
+        }
+        .hero-tag:hover {
+            background: rgba(201,168,76,0.15); border-color: var(--accent-bright);
+            transform: translateY(-2px);
+        }
+        .hero-cta {
+            display: flex; gap: 16px;
+            opacity: 0; animation: fadeInLeft 0.9s var(--ease) 1.05s forwards;
+        }
+        .btn-primary {
+            padding: 11px 28px; border: none; border-radius: 24px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-bright));
+            color: var(--hero-darker); font-size: 0.82rem; font-weight: bold;
+            letter-spacing: 1px; cursor: pointer; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 8px;
+            font-family: 'Helvetica Neue', sans-serif;
+            transition: all 0.3s var(--ease); position: relative; overflow: hidden;
+        }
+        .btn-primary::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, var(--accent-bright), #f0d878);
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .btn-primary:hover::before { opacity: 1; }
+        .btn-primary span { position: relative; z-index: 1; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.3); }
+        .btn-primary .arrow { transition: transform 0.3s; }
+        .btn-primary:hover .arrow { transform: translateY(3px); }
+
+        .btn-secondary {
+            padding: 11px 28px; border: 1px solid rgba(201,168,76,0.4);
+            border-radius: 24px; background: transparent;
+            color: var(--accent-bright); font-size: 0.82rem; font-weight: bold;
+            letter-spacing: 1px; cursor: pointer; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 8px;
+            font-family: 'Helvetica Neue', sans-serif;
+            transition: all 0.3s var(--ease);
+        }
+        .btn-secondary:hover {
+            background: rgba(201,168,76,0.1); border-color: var(--accent-bright);
+            transform: translateY(-2px);
+        }
+        .btn-secondary .star { transition: transform 0.4s; }
+        .btn-secondary:hover .star { transform: rotate(72deg) scale(1.2); }
+
+        /* Hero Right - Portrait + Floating Cards */
+        .hero-right {
+            flex-shrink: 0; width: 380px; height: 480px;
+            position: relative;
+            opacity: 0; animation: fadeInRight 1s var(--ease) 0.5s forwards;
+        }
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .hero-portrait-wrapper {
+            width: 100%; height: 100%; position: relative;
+            border-radius: 8px; overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .hero-portrait {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.6s var(--ease);
+        }
+        .hero-portrait-wrapper:hover .hero-portrait { transform: scale(1.05); }
+        .hero-portrait-wrapper::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(74,15,18,0.4), transparent 40%);
+            pointer-events: none;
+        }
+
+        /* Portrait badge */
+        .portrait-badge {
+            position: absolute; top: -12px; left: -12px;
+            width: 48px; height: 48px;
+            background: var(--hero-dark); border: 2px solid var(--accent-bright);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--accent-bright); font-size: 1.3rem; font-weight: bold;
+            z-index: 3; box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            animation: badgeFloat 4s ease infinite;
+        }
+        @keyframes badgeFloat {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-6px) rotate(5deg); }
+        }
+
+        /* Floating Data Cards */
+        .float-card {
+            position: absolute; background: #fff; border-radius: 8px;
+            padding: 14px 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            z-index: 3; transition: transform 0.4s var(--ease);
+        }
+        .float-card:hover { transform: scale(1.08); z-index: 4; }
+        .float-card .fc-value {
+            font-size: 1.4rem; font-weight: bold; color: var(--hero-dark);
+            font-family: 'Helvetica Neue', sans-serif; line-height: 1;
+        }
+        .float-card .fc-value .small { font-size: 0.75rem; color: var(--text-muted); }
+        .float-card .fc-label {
+            font-size: 0.68rem; color: var(--text-muted); letter-spacing: 1px;
+            margin-top: 4px; font-family: 'Helvetica Neue', sans-serif;
+        }
+
+        .fc-top-right {
+            top: 30px; right: -50px;
+            animation: floatA 5s ease infinite 1s;
+        }
+        .fc-bottom-left {
+            bottom: 60px; left: -50px;
+            animation: floatB 6s ease infinite 1.5s;
+        }
+        .fc-bottom-right {
+            bottom: 20px; right: -30px;
+            animation: floatA 5.5s ease infinite 0.5s;
+        }
+        @keyframes floatA {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+        @keyframes floatB {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(10px); }
+        }
+
+        /* Scroll indicator */
+        .hero-scroll {
+            position: absolute; bottom: 30px; left: 50%;
+            transform: translateX(-50%);
+            display: flex; flex-direction: column; align-items: center; gap: 6px;
+            z-index: 2; opacity: 0;
+            animation: fadeInUp 0.8s var(--ease) 1.3s forwards;
+        }
+        .hero-scroll span {
+            font-size: 0.65rem; color: rgba(255,248,231,0.5); letter-spacing: 3px;
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+        .scroll-line {
+            width: 1px; height: 30px;
+            background: linear-gradient(to bottom, var(--accent-bright), transparent);
+            animation: scrollLineAnim 2s ease infinite;
+        }
+        @keyframes scrollLineAnim {
+            0% { transform: scaleY(0); transform-origin: top; }
+            50% { transform: scaleY(1); transform-origin: top; }
+            51% { transform-origin: bottom; }
+            100% { transform: scaleY(0); transform-origin: bottom; }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translate(-50%, 20px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
+        }
+
+        /* ========== Section Common ========== */
+        section { padding: 110px 64px; position: relative; }
+        .section-label {
+            font-size: 0.7rem; color: var(--hero-dark); letter-spacing: 5px;
+            text-transform: uppercase; margin-bottom: 12px;
+            font-family: 'Helvetica Neue', sans-serif;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .section-label::before {
+            content: ''; width: 32px; height: 1px; background: var(--accent);
+        }
+        .section-title {
+            font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: bold;
+            margin-bottom: 50px; letter-spacing: 3px;
+        }
+        .section-title .accent { color: var(--hero-dark); }
+
+        /* About */
+        .about-container {
+            max-width: 1000px; margin: 0 auto;
+        }
+        .about-text { width: 100%; }
+        .about-text h3 {
+            font-size: 1.4rem; margin-bottom: 18px;
+            color: var(--text-primary); letter-spacing: 1px;
+        }
+        .about-text p {
+            color: var(--text-secondary); margin-bottom: 18px;
+            font-size: 1rem; line-height: 2;
+        }
+        .about-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+        .tag {
+            padding: 5px 14px; border: 1px solid var(--border); border-radius: 20px;
+            font-size: 0.75rem; color: var(--text-muted);
+            transition: all 0.3s var(--ease); cursor: default;
+            font-family: 'Helvetica Neue', sans-serif; background: var(--bg-card);
+        }
+        .tag:hover { border-color: var(--accent); color: var(--hero-dark); transform: translateY(-2px); }
+
+        /* Stats */
+        .stats { display: flex; justify-content: center; gap: 90px; flex-wrap: wrap; }
+        .stat-item { text-align: center; transition: transform 0.3s var(--ease); }
+        .stat-item:hover { transform: translateY(-4px); }
+        .stat-number {
+            font-size: 2.8rem; font-weight: bold; color: var(--hero-dark);
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+        .stat-label {
+            font-size: 0.85rem; color: var(--text-muted); letter-spacing: 2px;
+            margin-top: 8px; font-family: 'Helvetica Neue', sans-serif;
+        }
+
+        /* Skills */
+        .skills-container { max-width: 1000px; margin: 0 auto; }
+        .skill-row { margin-bottom: 28px; transition: transform 0.3s var(--ease); position: relative; padding-left: 16px; }
+        .skill-row::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+            width: 2px; background: var(--border); border-radius: 1px;
+            transition: background 0.3s var(--ease), height 0.3s var(--ease);
+        }
+        .skill-row:hover { transform: translateX(8px); }
+        .skill-row:hover::before { background: var(--hero-dark); height: 100%; }
+        .skill-header {
+            display: flex; justify-content: space-between; align-items: baseline;
+            margin-bottom: 8px;
+        }
+        .skill-name { font-size: 0.95rem; color: var(--text-primary); letter-spacing: 1px; transition: color 0.3s; }
+        .skill-row:hover .skill-name { color: var(--hero-dark); }
+        .skill-level {
+            font-size: 0.75rem; color: var(--hero-dark);
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+        .skill-bar {
+            height: 3px; background: var(--bg-soft); border-radius: 2px; overflow: hidden; position: relative;
+        }
+        .skill-fill {
+            height: 100%; width: 0%;
+            background: linear-gradient(90deg, var(--accent), var(--hero-dark));
+            border-radius: 2px; transition: width 1.5s var(--ease);
+            position: relative;
+        }
+        .skill-fill::after {
+            content: ''; position: absolute; right: 0; top: -2px; bottom: -2px;
+            width: 7px; border-radius: 50%; background: var(--hero-dark);
+            box-shadow: 0 0 8px var(--hero-dark); opacity: 0;
+            transition: opacity 0.3s 1.5s;
+        }
+        .skill-fill[style*="width"]:not([style*="width: 0"])::after { opacity: 1; }
+        .skill-tags-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+        .skill-tag {
+            font-size: 0.7rem; color: var(--text-muted); letter-spacing: 1px;
+            font-family: 'Helvetica Neue', sans-serif;
+            padding: 2px 8px; border: 1px solid var(--border); border-radius: 16px;
+            transition: all 0.3s var(--ease); cursor: default;
+        }
+        .skill-tag:hover { border-color: var(--accent); color: var(--hero-dark); background: var(--bg-soft); }
+
+        /* Project Cards */
+        .projects-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+            max-width: 1200px; margin: 40px auto 0;
+        }
+        .project-card {
+            padding: 28px 24px; background: var(--bg-card);
+            border: 1px solid var(--border); border-radius: 8px;
+            transition: all 0.4s var(--ease); cursor: default;
+            position: relative; overflow: hidden;
+        }
+        .project-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--hero-dark));
+            transform: scaleX(0); transform-origin: left;
+            transition: transform 0.4s var(--ease);
+        }
+        .project-card:hover {
+            transform: translateY(-6px); border-color: var(--accent-dim);
+            box-shadow: 0 12px 36px rgba(154,27,30,0.06);
+        }
+        .project-card:hover::before { transform: scaleX(1); }
+        .project-icon {
+            font-size: 1.6rem; margin-bottom: 12px; display: block;
+            transition: transform 0.4s var(--ease);
+        }
+        .project-card:hover .project-icon { transform: scale(1.2) rotate(-8deg); }
+        .project-name {
+            font-size: 0.9rem; color: var(--text-primary); margin-bottom: 6px;
+            font-weight: bold; letter-spacing: 1px;
+        }
+        .project-desc {
+            font-size: 0.75rem; color: var(--text-muted); line-height: 1.6;
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+
+        /* Works Section */
+        #works { padding: 110px 64px; background: var(--bg-page); }
+        .section-subtitle {
+            text-align: center; color: var(--text-muted);
+            font-size: 0.85rem; margin-top: 12px; margin-bottom: 48px;
+            font-family: 'Helvetica Neue', sans-serif; letter-spacing: 1px;
+        }
+        .works-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px;
+            max-width: 1300px; margin: 0 auto;
+        }
+        .work-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 10px; overflow: hidden; cursor: pointer;
+            transition: all 0.4s var(--ease); position: relative;
+            display: flex; flex-direction: column;
+        }
+        .work-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(154,27,30,0.1);
+            border-color: var(--accent-dim);
+        }
+        .work-thumb {
+            height: 180px; display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden;
+            transition: all 0.4s var(--ease);
+        }
+        .work-thumb::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(154,27,30,0.08), rgba(212,160,23,0.08));
+            opacity: 0; transition: opacity 0.4s var(--ease);
+        }
+        .work-card:hover .work-thumb::after { opacity: 1; }
+        .work-card:hover .work-thumb { transform: scale(1.05); }
+        .work-thumb-1 { background: linear-gradient(135deg, #fef3e2, #fce8c8); }
+        .work-thumb-2 { background: linear-gradient(135deg, #f0e6d3, #e8d5b7); }
+        .work-thumb-3 { background: linear-gradient(135deg, #e8f0e8, #d4e4d4); }
+        .work-thumb-4 { background: linear-gradient(135deg, #e6e0f0, #d0c4e0); }
+        .work-thumb-5 { background: linear-gradient(135deg, #e0ebe0, #c8dcc8); }
+        .work-thumb-6 { background: linear-gradient(135deg, #f0e0e0, #e0c8c8); }
+        .work-thumb-7 { background: linear-gradient(135deg, #e0ebe8, #c8dcd4); }
+        .work-emoji { font-size: 3rem; position: relative; z-index: 1; transition: transform 0.5s var(--ease); }
+        .work-card:hover .work-emoji { transform: scale(1.2) rotate(-5deg); }
+        .work-info { padding: 20px 22px 24px; flex: 1; display: flex; flex-direction: column; }
+        .work-category {
+            font-size: 0.7rem; color: var(--accent); letter-spacing: 1.5px;
+            text-transform: uppercase; font-weight: bold; margin-bottom: 8px;
+        }
+        .work-title {
+            font-size: 1rem; color: var(--text-primary); margin-bottom: 8px;
+            font-weight: bold; letter-spacing: 0.5px;
+        }
+        .work-desc {
+            font-size: 0.8rem; color: var(--text-muted); line-height: 1.6;
+            font-family: 'Helvetica Neue', sans-serif; margin-bottom: 14px; flex: 1;
+        }
+        .work-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+        .work-tag {
+            font-size: 0.65rem; padding: 3px 10px;
+            background: var(--bg-soft); border: 1px solid var(--border);
+            border-radius: 12px; color: var(--text-muted);
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+        .work-arrow {
+            position: absolute; top: 16px; right: 16px;
+            width: 32px; height: 32px; border-radius: 50%;
+            background: var(--bg-card); border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.9rem; color: var(--text-muted);
+            transition: all 0.3s var(--ease); opacity: 0; transform: translateX(-10px);
+        }
+        .work-card:hover .work-arrow { opacity: 1; transform: translateX(0); background: var(--hero-dark); color: #fff; border-color: var(--hero-dark); }
+
+        /* Work Detail Overlay */
+        .work-detail-overlay {
+            position: fixed; inset: 0; z-index: 100;
+            background: rgba(26,10,10,0.6); backdrop-filter: blur(8px);
+            opacity: 0; visibility: hidden;
+            transition: all 0.4s var(--ease);
+            display: flex; align-items: center; justify-content: center;
+            padding: 40px;
+        }
+        .work-detail-overlay.active { opacity: 1; visibility: visible; }
+        .work-detail-container {
+            background: var(--bg-page); width: 100%; max-width: 1000px;
+            max-height: 90vh; overflow-y: auto;
+            border-radius: 12px; position: relative;
+            transform: translateY(40px) scale(0.95);
+            transition: transform 0.5s var(--ease);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.2);
+        }
+        .work-detail-overlay.active .work-detail-container { transform: translateY(0) scale(1); }
+        .work-detail-close {
+            position: absolute; top: 20px; right: 20px; z-index: 10;
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--bg-card); border: 1px solid var(--border);
+            cursor: pointer; font-size: 1.2rem; color: var(--text-primary);
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s var(--ease);
+        }
+        .work-detail-close:hover { background: var(--hero-dark); color: #fff; transform: rotate(90deg); }
+        .work-detail-hero {
+            height: 240px; display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden;
+            border-radius: 12px 12px 0 0;
+        }
+        .work-detail-hero-emoji { font-size: 5rem; position: relative; z-index: 1; }
+        .work-detail-content { padding: 40px 48px; }
+        .work-detail-category {
+            font-size: 0.75rem; color: var(--accent); letter-spacing: 2px;
+            text-transform: uppercase; font-weight: bold; margin-bottom: 12px;
+        }
+        .work-detail-title {
+            font-size: 1.8rem; color: var(--text-primary); margin-bottom: 16px;
+            font-weight: bold; letter-spacing: 1px;
+        }
+        .work-detail-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
+        .work-detail-tag {
+            font-size: 0.7rem; padding: 5px 14px;
+            background: var(--bg-soft); border: 1px solid var(--border);
+            border-radius: 16px; color: var(--text-muted);
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+        .work-detail-section {
+            margin-bottom: 32px;
+        }
+        .work-detail-section-title {
+            font-size: 0.85rem; color: var(--text-primary); font-weight: bold;
+            margin-bottom: 12px; display: flex; align-items: center; gap: 10px;
+            letter-spacing: 1px;
+        }
+        .work-detail-section-title::before {
+            content: ''; width: 3px; height: 16px; background: var(--hero-dark); border-radius: 2px;
+        }
+        .work-detail-section-text {
+            font-size: 0.85rem; color: var(--text-muted); line-height: 1.8;
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+        .work-detail-placeholder {
+            background: var(--bg-soft); border: 1px dashed var(--border);
+            border-radius: 8px; padding: 32px; text-align: center;
+            color: var(--text-muted); font-size: 0.85rem;
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+        .work-detail-nav {
+            display: flex; justify-content: space-between; padding: 24px 48px 40px;
+            border-top: 1px solid var(--border);
+        }
+        .work-detail-nav-btn {
+            padding: 10px 20px; background: var(--bg-card);
+            border: 1px solid var(--border); border-radius: 6px;
+            cursor: pointer; font-size: 0.8rem; color: var(--text-primary);
+            transition: all 0.3s var(--ease);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .work-detail-nav-btn:hover { border-color: var(--accent-dim); color: var(--hero-dark); }
+        .work-detail-nav-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* Awards Carousel */
+        .carousel-wrapper { max-width: 1100px; margin: 0 auto; position: relative; }
+        .carousel-viewport { overflow: hidden; border-radius: 6px; }
+        .carousel-track { display: flex; transition: transform 0.6s var(--ease); }
+        .carousel-slide {
+            min-width: 100%; display: flex; justify-content: center;
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 6px; overflow: hidden; position: relative;
+        }
+        .carousel-img {
+            width: 100%; max-height: 560px; object-fit: contain; background: var(--bg-soft);
+            transition: transform 0.4s var(--ease);
+        }
+        .carousel-slide:hover .carousel-img { transform: scale(1.02); }
+        .carousel-info {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 20px 30px;
+            background: linear-gradient(to top, rgba(255,255,255,0.97), rgba(255,255,255,0.85) 70%, transparent);
+            display: flex; align-items: flex-end; justify-content: space-between;
+        }
+        .carousel-text h3 {
+            font-size: 1.1rem; color: var(--text-primary); margin-bottom: 4px; letter-spacing: 1px;
+        }
+        .carousel-text p {
+            font-size: 0.8rem; color: var(--text-muted); font-family: 'Helvetica Neue', sans-serif;
+        }
+        .carousel-badge {
+            padding: 4px 12px; border-radius: 16px;
+            font-size: 0.7rem; font-weight: bold; letter-spacing: 1px;
+            font-family: 'Helvetica Neue', sans-serif; white-space: nowrap;
+            background: var(--hero-dark); color: var(--accent-bright);
+        }
+        .carousel-badge.gold { background: linear-gradient(135deg, var(--accent), #e8c860); color: #fff; }
+
+        .carousel-btn {
+            position: absolute; top: 45%; transform: translateY(-50%);
+            width: 40px; height: 40px;
+            border: 1px solid var(--border); border-radius: 50%;
+            background: var(--bg-card); cursor: pointer; z-index: 5;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s var(--ease);
+            color: var(--text-secondary); font-size: 1.1rem;
+        }
+        .carousel-btn:hover {
+            border-color: var(--hero-dark); color: var(--hero-dark);
+            background: var(--accent-dim); transform: translateY(-50%) scale(1.1);
+        }
+        .carousel-btn.prev { left: -20px; }
+        .carousel-btn.next { right: -20px; }
+
+        .carousel-dots { display: flex; justify-content: center; gap: 8px; margin-top: 24px; }
+        .carousel-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--border); cursor: pointer;
+            transition: all 0.3s var(--ease);
+        }
+        .carousel-dot.active { background: var(--hero-dark); width: 24px; border-radius: 4px; }
+
+        /* Philosophy */
+        .philosophy-container { max-width: 1100px; margin: 0 auto; }
+        .quote-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+        .quote-card {
+            padding: 40px 36px; background: var(--bg-card);
+            border: 1px solid var(--border); border-radius: 6px;
+            position: relative; transition: all 0.4s var(--ease); overflow: hidden;
+        }
+        .quote-card::before {
+            content: '\201C'; position: absolute; top: -8px; left: 16px;
+            font-size: 5rem; color: var(--accent-dim); font-family: Georgia, serif;
+            line-height: 1; transition: color 0.5s;
+        }
+        .quote-card:hover {
+            border-color: var(--accent-dim); transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 10px 36px rgba(107,27,30,0.06);
+        }
+        .quote-card:hover::before { color: var(--accent); }
+        .quote-text {
+            font-size: 1.05rem; color: var(--text-primary);
+            margin-bottom: 14px; position: relative; z-index: 1;
+            line-height: 1.8; letter-spacing: 0.5px;
+        }
+        .quote-attr {
+            font-size: 0.75rem; color: var(--hero-dark); letter-spacing: 2px;
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+
+        /* Timeline */
+        .timeline { max-width: 1000px; margin: 0 auto; position: relative; }
+        .timeline::before {
+            content: ''; position: absolute; left: 50%; top: 0; bottom: 0;
+            width: 1px; background: linear-gradient(to bottom, transparent, var(--accent-dim), transparent);
+        }
+        .timeline-item {
+            display: flex; align-items: center; margin-bottom: 40px; position: relative;
+        }
+        .timeline-item:nth-child(odd) { flex-direction: row-reverse; }
+        .timeline-content {
+            width: 44%; padding: 20px 26px; background: var(--bg-card);
+            border: 1px solid var(--border); border-radius: 6px;
+            transition: all 0.4s var(--ease);
+        }
+        .timeline-content:hover {
+            border-color: var(--accent-dim); transform: scale(1.03);
+            box-shadow: 0 8px 24px rgba(107,27,30,0.05);
+        }
+        .timeline-date {
+            font-size: 0.75rem; color: var(--hero-dark); letter-spacing: 2px;
+            margin-bottom: 6px; font-family: 'Helvetica Neue', sans-serif;
+        }
+        .timeline-title { font-size: 0.98rem; color: var(--text-primary); margin-bottom: 4px; }
+        .timeline-desc { font-size: 0.8rem; color: var(--text-muted); }
+        .timeline-dot {
+            position: absolute; left: 50%; transform: translateX(-50%);
+            width: 10px; height: 10px; background: var(--hero-dark);
+            border-radius: 50%; border: 3px solid var(--bg);
+            z-index: 2; transition: all 0.3s;
+        }
+        .timeline-item:hover .timeline-dot { box-shadow: 0 0 0 5px var(--accent-dim); }
+
+        /* Footer */
+        footer {
+            padding: 70px 50px 36px; text-align: center;
+            border-top: 1px solid var(--border); position: relative;
+        }
+        .footer-quote {
+            font-size: 1.2rem; color: var(--hero-dark); margin-bottom: 24px;
+            letter-spacing: 3px; font-style: italic;
+        }
+        .footer-text {
+            color: var(--text-muted); font-size: 0.8rem; letter-spacing: 2px;
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+        .footer-line { width: 80px; height: 1px; background: var(--accent-dim); margin: 24px auto; }
+
+        /* Scroll Reveal */
+        .reveal {
+            opacity: 0; transform: translateY(30px);
+            transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+            z-index: 1000; display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s;
+        }
+        .lightbox.active { opacity: 1; pointer-events: all; }
+        .lightbox-content {
+            max-width: 85%; max-height: 85vh; border-radius: 4px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            transform: scale(0.95); transition: transform 0.3s var(--ease);
+        }
+        .lightbox.active .lightbox-content { transform: scale(1); }
+        .lightbox-close {
+            position: absolute; top: 20px; right: 28px;
+            font-size: 1.8rem; color: #fff; cursor: pointer;
+            z-index: 1001; transition: color 0.3s; background: none; border: none;
+        }
+        .lightbox-close:hover { color: var(--accent-bright); }
+        .lightbox-caption {
+            position: absolute; bottom: 24px; left: 50%;
+            transform: translateX(-50%); color: rgba(255,255,255,0.8);
+            font-size: 0.85rem; letter-spacing: 1px; text-align: center; max-width: 500px;
+        }
+
+        /* Responsive */
+        /* Tablet */
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .works-grid { grid-template-columns: repeat(2, 1fr); }
+            .hero-inner { padding: 0 40px; }
+            section { padding: 90px 40px; }
+            #works { padding: 90px 40px; }
+            nav { padding: 14px 40px; }
+            nav.scrolled { padding: 10px 40px; }
+            .stats { gap: 60px; }
+            .stat-number { font-size: 2.4rem; }
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .hero { height: auto; min-height: 100vh; padding: 100px 0 60px; }
+            nav { padding: 12px 20px; }
+            nav.scrolled { padding: 10px 20px; }
+            .nav-toggle { display: block; }
+            .nav-toggle.dark span { background: var(--text-cream); }
+            nav.scrolled .nav-toggle span,
+            nav.scrolled .nav-toggle.dark span { background: var(--text-primary); }
+            .nav-toggle.active span { background: var(--text-primary); }
+
+            .nav-links {
+                position: fixed; top: 0; right: -100%;
+                width: 70%; height: 100vh;
+                background: var(--bg); flex-direction: column;
+                padding: 80px 30px 30px; gap: 0;
+                transition: right 0.4s var(--ease);
+                box-shadow: -4px 0 30px rgba(0,0,0,0.08);
+            }
+            .nav-links.open { right: 0; }
+            .nav-links li { width: 100%; border-bottom: 1px solid var(--border); }
+            .nav-links a { display: block; padding: 16px 0; font-size: 0.95rem; }
+            .nav-links a::after { display: none; }
+
+            .hero-inner { flex-direction: column; padding: 0 20px; gap: 30px; padding-top: 80px; }
+            .hero-right { width: 220px; height: 300px; }
+            .fc-top-right { right: -8px; top: 15%; }
+            .fc-bottom-left { left: -8px; bottom: 20%; }
+            .fc-bottom-right { right: 0; bottom: 5%; }
+            .float-card { padding: 8px 12px; }
+            .float-card .fc-value { font-size: 1rem; }
+            .float-card .fc-label { font-size: 0.6rem; }
+            .hero-cta { flex-direction: column; width: 100%; }
+            .hero-cta a { width: 100%; justify-content: center; }
+            .hero-name { font-size: clamp(2rem, 8vw, 3rem); letter-spacing: 4px; }
+            .hero-bio { font-size: 0.82rem; }
+            .hero-tags { gap: 6px; }
+            .hero-tag { font-size: 0.65rem; padding: 4px 10px; }
+
+            section { padding: 70px 20px; }
+            #works { padding: 70px 20px; }
+            .section-title { font-size: 1.5rem; margin-bottom: 36px; letter-spacing: 2px; }
+            .section-label { font-size: 0.65rem; letter-spacing: 3px; }
+            .section-subtitle { margin-bottom: 36px; }
+
+            .about-container { max-width: 100%; }
+            .about-text h3 { font-size: 1.2rem; }
+            .about-text p { font-size: 0.88rem; line-height: 1.85; }
+            .about-tags { gap: 6px; }
+            .tag { font-size: 0.68rem; padding: 4px 10px; }
+
+            .stats { gap: 30px; flex-wrap: wrap; }
+            .stat-number { font-size: 2rem; }
+            .stat-label { font-size: 0.7rem; letter-spacing: 1px; }
+
+            .skills-container { max-width: 100%; }
+            .skill-name { font-size: 0.88rem; }
+            .skill-level { font-size: 0.7rem; }
+            .skill-tag { font-size: 0.6rem; padding: 2px 6px; }
+            .skill-row { margin-bottom: 22px; }
+
+            .works-grid { grid-template-columns: 1fr; max-width: 100%; }
+            .work-thumb { height: 140px; }
+            .work-emoji { font-size: 2.4rem; }
+            .work-title { font-size: 0.92rem; }
+            .work-desc { font-size: 0.76rem; }
+            .work-tag { font-size: 0.6rem; }
+            .work-arrow { display: none; }
+
+            .carousel-wrapper { max-width: 100%; }
+            .carousel-img { max-height: 380px; }
+            .carousel-info { flex-direction: column; gap: 6px; align-items: flex-start; padding: 14px 18px; }
+            .carousel-text h3 { font-size: 0.95rem; }
+            .carousel-text p { font-size: 0.72rem; }
+            .carousel-badge { font-size: 0.62rem; padding: 3px 8px; }
+            .carousel-btn { width: 34px; height: 34px; font-size: 1rem; }
+            .carousel-btn.prev { left: 6px; }
+            .carousel-btn.next { right: 6px; }
+            .carousel-dots { gap: 6px; }
+            .carousel-dot { width: 8px; height: 8px; }
+
+            .projects-grid { grid-template-columns: 1fr; max-width: 100%; }
+            .project-card { padding: 20px 18px; }
+
+            .quote-cards { grid-template-columns: 1fr; }
+            .quote-card { padding: 28px 22px; }
+
+            .philosophy-container { max-width: 100%; }
+
+            .timeline { max-width: 100%; }
+            .timeline::before { left: 20px; }
+            .timeline-item, .timeline-item:nth-child(odd) { flex-direction: row; padding-left: 48px; padding-right: 0; }
+            .timeline-content { width: 100%; padding: 20px; }
+            .timeline-dot { left: 20px; }
+            .timeline-date { font-size: 0.72rem; }
+            .timeline-title { font-size: 0.88rem; }
+            .timeline-desc { font-size: 0.76rem; }
+
+            .work-detail-overlay { padding: 12px; }
+            .work-detail-container { border-radius: 10px; }
+            .work-detail-hero { height: 160px; }
+            .work-detail-hero-emoji { font-size: 3rem; }
+            .work-detail-content { padding: 24px 20px; }
+            .work-detail-title { font-size: 1.3rem; }
+            .work-detail-category { font-size: 0.68rem; }
+            .work-detail-section-title { font-size: 0.8rem; }
+            .work-detail-placeholder { padding: 20px; font-size: 0.8rem; }
+            .work-detail-nav { padding: 16px 20px 28px; flex-direction: column; gap: 10px; }
+            .work-detail-nav-btn { justify-content: center; font-size: 0.75rem; padding: 8px 16px; }
+
+            footer { padding: 40px 20px; }
+            .footer-quote { font-size: 0.9rem; letter-spacing: 2px; }
+            .footer-text { font-size: 0.72rem; }
+        }
+
+        /* Small Phone */
+        @media (max-width: 380px) {
+            .hero-right { width: 180px; height: 260px; }
+            .hero-name { font-size: 1.8rem; letter-spacing: 2px; }
+            .hero-tagline { font-size: 0.62rem; letter-spacing: 4px; }
+            .hero-bio { font-size: 0.76rem; }
+            .hero-tag { font-size: 0.58rem; padding: 3px 8px; }
+            .stat-number { font-size: 1.7rem; }
+            .stat-label { font-size: 0.62rem; }
+            .stats { gap: 20px; }
+            .section-title { font-size: 1.3rem; }
+            .work-thumb { height: 120px; }
+            .work-emoji { font-size: 2rem; }
+            .carousel-img { max-height: 300px; }
+            .float-card { padding: 6px 10px; }
+            .float-card .fc-value { font-size: 0.88rem; }
+            .float-card .fc-label { font-size: 0.52rem; }
+            .nav-links { width: 85%; }
+        }
+
+        /* ========== Advanced Interactions ========== */
+
+        /* Section title hover glow */
+        .section-title {
+            cursor: default;
+            transition: text-shadow 0.4s var(--ease);
+        }
+        .section-title:hover {
+            text-shadow: 0 0 30px var(--accent-dim);
+        }
+
+        /* Stat number glow on hover */
+        .stat-number {
+            transition: text-shadow 0.3s, transform 0.3s var(--ease);
+            cursor: default;
+        }
+        .stat-item:hover .stat-number {
+            text-shadow: 0 0 20px rgba(154,27,30,0.2);
+        }
+
+        /* Quote card inner glow */
+        .quote-card {
+            cursor: default;
+        }
+        .quote-card::after {
+            content: ''; position: absolute; inset: 0; border-radius: 6px;
+            box-shadow: inset 0 0 0 0 var(--accent-dim);
+            transition: box-shadow 0.5s var(--ease);
+            pointer-events: none;
+        }
+        .quote-card:hover::after {
+            box-shadow: inset 0 0 30px 2px var(--accent-dim);
+        }
+
+        /* Tag pop-in animation */
+        .tag {
+            animation: tagPop 0.5s var(--ease) backwards;
+        }
+        .tag:nth-child(1) { animation-delay: 0.1s; }
+        .tag:nth-child(2) { animation-delay: 0.15s; }
+        .tag:nth-child(3) { animation-delay: 0.2s; }
+        .tag:nth-child(4) { animation-delay: 0.25s; }
+        .tag:nth-child(5) { animation-delay: 0.3s; }
+        .tag:nth-child(6) { animation-delay: 0.35s; }
+        .tag:nth-child(7) { animation-delay: 0.4s; }
+        .tag:nth-child(8) { animation-delay: 0.45s; }
+        @keyframes tagPop {
+            from { opacity: 0; transform: scale(0.8) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Smooth section enter */
+        section .section-label, section .section-title {
+            transition: opacity 0.7s var(--ease), transform 0.7s var(--ease), text-shadow 0.4s;
+        }
+
+        /* Nav link active state */
+        .nav-links a.active {
+            color: var(--hero-dark);
+        }
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        /* Scroll hint pulse */
+        .hero-scroll {
+            animation: fadeInUp 0.8s var(--ease) 1.3s forwards, scrollHintPulse 3s ease infinite 2.5s;
+        }
+        @keyframes scrollHintPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-brand" onclick="scrollTo({top:0,behavior:'smooth'})">
+            <div class="nav-logo-box">晴</div>
+            <span class="nav-title">追光而遇<span class="sep">·</span>贾梦晴</span>
+        </div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#about">关于我</a></li>
+            <li><a href="#skills">能力</a></li>
+            <li><a href="#works">我的作品</a></li>
+            <li><a href="#awards">荣誉奖项</a></li>
+            <li><a href="#philosophy">个人理念</a></li>
+            <li><a href="#timeline">成长历程</a></li>
+        </ul>
+        <div class="nav-toggle" id="navToggle"><span></span><span></span><span></span></div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero" id="home">
+        <div class="hero-beam" id="heroBeam"></div>
+        <div class="hero-arcs">
+            <div class="arc arc-1"></div>
+            <div class="arc arc-2"></div>
+            <div class="arc arc-3"></div>
+        </div>
+        <div class="hero-inner" id="heroInner">
+            <div class="hero-left">
+                <div class="hero-tagline">MEET THE LIGHT</div>
+                <div class="hero-school">天津仁爱学院</div>
+                <h1 class="hero-name">贾<span class="gold">梦</span>晴</h1>
+                <p class="hero-bio">数智传媒与设计艺术学院 · 智能交互设计专业</p>
+                <p class="hero-bio">班级团支书 / 新媒体宣传组成员 / 青年志愿者协会</p>
+                <p class="hero-motto">"以光为向，以梦为马"</p>
+                <div class="hero-tags">
+                    <span class="hero-tag">智能交互设计</span>
+                    <span class="hero-tag">班级团支书</span>
+                    <span class="hero-tag">新媒体宣传</span>
+                    <span class="hero-tag">志愿服务</span>
+                </div>
+                <div class="hero-cta">
+                    <a href="#about" class="btn-primary"><span>了解我的故事</span><span class="arrow">↓</span></a>
+                    <a href="#awards" class="btn-secondary"><span>看看我的荣誉</span><span class="star">★</span></a>
+                </div>
+            </div>
+            <div class="hero-right" id="heroRight">
+                <div class="portrait-badge">晴</div>
+                <div class="hero-portrait-wrapper">
+                    <img src="portrait.png" alt="贾梦晴" class="hero-portrait">
+                </div>
+                <div class="float-card fc-top-right">
+                    <div class="fc-value" data-float="1/63">1<span class="small">/63</span></div>
+                    <div class="fc-label">综合排名</div>
+                </div>
+                <div class="float-card fc-bottom-left">
+                    <div class="fc-value" data-float="88.50">88.50</div>
+                    <div class="fc-label">专业均分</div>
+                </div>
+                <div class="float-card fc-bottom-right">
+                    <div class="fc-value" data-float="TOP10">TOP<span class="small">10%</span></div>
+                    <div class="fc-label">专业成绩</div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll">
+            <span>SCROLL</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section id="about">
+        <div class="section-label reveal visible">ABOUT ME</div>
+        <h2 class="section-title reveal visible">关于<span class="accent">我</span></h2>
+        <div class="about-container">
+            <div class="about-text reveal reveal-delay-1 visible">
+                <h3>探索者 · 创造者</h3>
+                <p>我是贾梦晴，天津仁爱学院数智传媒与设计艺术学院智能交互专业在读。一个对世界充满好奇、在实践中不断突破自我的设计人。</p>
+                <p>专业成绩稳居前10，第一学年综合成绩63人中排名第1。获友发奖学金、优秀班干部、优秀团干部等多项荣誉。在国青杯、人工智能+创新创业大赛、好创意、华灿杯等设计竞赛中屡获佳绩。</p>
+                <p>担任班级团支书、智能交互专业新媒体宣传组成员、青年志愿者协会成员，在组织协调与创意输出中持续成长。课余热衷公益志愿，从大熊猫守护计划到COP28全球青年零碳行动，用行动践行青年责任。</p>
+                <div class="about-tags">
+                    <span class="tag">智能交互设计</span>
+                    <span class="tag">产品设计</span>
+                    <span class="tag">团支书</span>
+                    <span class="tag">新媒体宣传</span>
+                    <span class="tag">青年志愿者协会</span>
+                    <span class="tag">ISTP-T</span>
+                    <span class="tag">友发奖学金</span>
+                    <span class="tag">好创意大赛</span>
+                    <span class="tag">华灿杯</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section style="padding: 50px 50px;">
+        <div class="stats reveal visible">
+            <div class="stat-item">
+                <div class="stat-number" data-target="1" data-suffix="">1</div>
+                <div class="stat-label">综合成绩排名</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="10" data-suffix="%">10%</div>
+                <div class="stat-label">专业成绩前10</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="6" data-suffix="+">0</div>
+                <div class="stat-label">设计竞赛获奖</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="7" data-suffix="+">0</div>
+                <div class="stat-label">荣誉证书</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="7" data-suffix="">0</div>
+                <div class="stat-label">设计项目</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills">
+        <div class="section-label reveal visible">SKILLS &amp; ABILITIES</div>
+        <h2 class="section-title reveal visible">能力<span class="accent">版图</span></h2>
+        <div class="skills-container">
+            <div class="skill-row reveal visible">
+                <div class="skill-header"><span class="skill-name">智能产品设计</span><span class="skill-level">90%</span></div>
+                <div class="skill-bar"><div class="skill-fill" data-width="90" style="width: 90%;"></div></div>
+                <div class="skill-tags-row"><span class="skill-tag">多功能阅读台灯</span><span class="skill-tag">适老化轮椅升降机</span><span class="skill-tag">苗风保温杯</span><span class="skill-tag">丛林灭火无人机</span></div>
+            </div>
+            <div class="skill-row reveal reveal-delay-1 visible">
+                <div class="skill-header"><span class="skill-name">交互设计</span><span class="skill-level">85%</span></div>
+                <div class="skill-bar"><div class="skill-fill" data-width="85" style="width: 85%;"></div></div>
+                <div class="skill-tags-row"><span class="skill-tag">智能交互</span><span class="skill-tag">用户体验</span><span class="skill-tag">界面设计</span></div>
+            </div>
+            <div class="skill-row reveal reveal-delay-2 visible">
+                <div class="skill-header"><span class="skill-name">疗愈场景与服务设计</span><span class="skill-level">82%</span></div>
+                <div class="skill-bar"><div class="skill-fill" data-width="82" style="width: 82%;"></div></div>
+                <div class="skill-tags-row"><span class="skill-tag">疗愈类场景设计</span><span class="skill-tag">情感陪伴装置</span><span class="skill-tag">服务设计思维</span></div>
+            </div>
+            <div class="skill-row reveal reveal-delay-3 visible">
+                <div class="skill-header"><span class="skill-name">设计竞赛与创意实践</span><span class="skill-level">88%</span></div>
+                <div class="skill-bar"><div class="skill-fill" data-width="88" style="width: 88%;"></div></div>
+                <div class="skill-tags-row"><span class="skill-tag">好创意大赛</span><span class="skill-tag">华灿杯</span><span class="skill-tag">国青杯</span><span class="skill-tag">人工智能+大赛</span></div>
+            </div>
+            <div class="skill-row reveal visible">
+                <div class="skill-header"><span class="skill-name">新媒体宣传与内容创作</span><span class="skill-level">80%</span></div>
+                <div class="skill-bar"><div class="skill-fill" data-width="80" style="width: 80%;"></div></div>
+                <div class="skill-tags-row"><span class="skill-tag">新媒体宣传组</span><span class="skill-tag">文案策划</span><span class="skill-tag">视觉传播</span></div>
+            </div>
+            <div class="skill-row reveal reveal-delay-1 visible">
+                <div class="skill-header"><span class="skill-name">组织协调与团队领导</span><span class="skill-level">85%</span></div>
+                <div class="skill-bar"><div class="skill-fill" data-width="85" style="width: 85%;"></div></div>
+                <div class="skill-tags-row"><span class="skill-tag">团支书</span><span class="skill-tag">青年志愿者协会</span><span class="skill-tag">主题团课组织</span></div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Works -->
+    <section id="works">
+        <div class="section-label reveal">MY PORTFOLIO</div>
+        <h2 class="section-title reveal">我的<span class="accent">作品</span></h2>
+        <p class="section-subtitle reveal">精选设计作品，点击查看详情</p>
+        <div class="works-grid">
+            <div class="work-card reveal" onclick="openWorkDetail(0)">
+                <div class="work-thumb work-thumb-1">
+                    <span class="work-emoji">💡</span>
+                </div>
+                <div class="work-info">
+                    <div class="work-category">智能产品设计</div>
+                    <h3 class="work-title">多功能阅读台灯</h3>
+                    <p class="work-desc">国青杯艺术设计一等奖作品，融合护眼照明与智能交互</p>
+                    <div class="work-tags">
+                        <span class="work-tag">产品设计</span>
+                        <span class="work-tag">智能交互</span>
+                        <span class="work-tag">一等奖</span>
+                    </div>
+                </div>
+                <div class="work-arrow">→</div>
+            </div>
+            <div class="work-card reveal reveal-delay-1" onclick="openWorkDetail(1)">
+                <div class="work-thumb work-thumb-2">
+                    <span class="work-emoji">🍵</span>
+                </div>
+                <div class="work-info">
+                    <div class="work-category">文化创意设计</div>
+                    <h3 class="work-title">苗风保温杯</h3>
+                    <p class="work-desc">融合苗族传统文化元素与现代保温器皿的产品设计</p>
+                    <div class="work-tags">
+                        <span class="work-tag">文创设计</span>
+                        <span class="work-tag">民族文化</span>
+                        <span class="work-tag">产品设计</span>
+                    </div>
+                </div>
+                <div class="work-arrow">→</div>
+            </div>
+            <div class="work-card reveal reveal-delay-2" onclick="openWorkDetail(2)">
+                <div class="work-thumb work-thumb-3">
+                    <span class="work-emoji">♿</span>
+                </div>
+                <div class="work-info">
+                    <div class="work-category">适老化设计</div>
+                    <h3 class="work-title">适老化轮椅升降机</h3>
+                    <p class="work-desc">关注老年群体出行痛点，设计安全便捷的轮椅升降装置</p>
+                    <div class="work-tags">
+                        <span class="work-tag">适老化</span>
+                        <span class="work-tag">无障碍</span>
+                        <span class="work-tag">机械设计</span>
+                    </div>
+                </div>
+                <div class="work-arrow">→</div>
+            </div>
+            <div class="work-card reveal" onclick="openWorkDetail(3)">
+                <div class="work-thumb work-thumb-4">
+                    <span class="work-emoji">🥽</span>
+                </div>
+                <div class="work-info">
+                    <div class="work-category">VR体验设计</div>
+                    <h3 class="work-title">基于VR的农业技术体验设计</h3>
+                    <p class="work-desc">运用虚拟现实技术打造沉浸式农业技术学习体验</p>
+                    <div class="work-tags">
+                        <span class="work-tag">VR/AR</span>
+                        <span class="work-tag">体验设计</span>
+                        <span class="work-tag">农业科技</span>
+                    </div>
+                </div>
+                <div class="work-arrow">→</div>
+            </div>
+            <div class="work-card reveal reveal-delay-1" onclick="openWorkDetail(4)">
+                <div class="work-thumb work-thumb-5">
+                    <span class="work-emoji">🤖</span>
+                </div>
+                <div class="work-info">
+                    <div class="work-category">智能装备设计</div>
+                    <h3 class="work-title">农用机器人多载荷模块化产品设计</h3>
+                    <p class="work-desc">面向智慧农业的多功能模块化农用机器人系统设计</p>
+                    <div class="work-tags">
+                        <span class="work-tag">机器人</span>
+                        <span class="work-tag">模块化</span>
+                        <span class="work-tag">智慧农业</span>
+                    </div>
+                </div>
+                <div class="work-arrow">→</div>
+            </div>
+            <div class="work-card reveal reveal-delay-2" onclick="openWorkDetail(5)">
+                <div class="work-thumb work-thumb-6">
+                    <span class="work-emoji">🚁</span>
+                </div>
+                <div class="work-info">
+                    <div class="work-category">应急装备设计</div>
+                    <h3 class="work-title">丛林灭火无人机</h3>
+                    <p class="work-desc">面向森林火灾场景的智能无人机概念设计与系统方案</p>
+                    <div class="work-tags">
+                        <span class="work-tag">无人机</span>
+                        <span class="work-tag">应急救援</span>
+                        <span class="work-tag">概念设计</span>
+                    </div>
+                </div>
+                <div class="work-arrow">→</div>
+            </div>
+            <div class="work-card reveal" onclick="openWorkDetail(6)">
+                <div class="work-thumb work-thumb-7">
+                    <span class="work-emoji">🌲</span>
+                </div>
+                <div class="work-info">
+                    <div class="work-category">疗愈场景设计</div>
+                    <h3 class="work-title">塞罕坝环境疗愈设计</h3>
+                    <p class="work-desc">以塞罕坝精神为内核的环境疗愈空间与体验设计</p>
+                    <div class="work-tags">
+                        <span class="work-tag">疗愈设计</span>
+                        <span class="work-tag">环境设计</span>
+                        <span class="work-tag">服务设计</span>
+                    </div>
+                </div>
+                <div class="work-arrow">→</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Awards Carousel -->
+    <section id="awards">
+        <div class="section-label reveal visible">AWARDS &amp; HONORS</div>
+        <h2 class="section-title reveal visible">荣誉<span class="accent">奖项</span></h2>
+        <div class="carousel-wrapper reveal visible">
+            <button class="carousel-btn prev" onclick="carouselMove(-1)">‹</button>
+            <div class="carousel-viewport">
+                <div class="carousel-track" id="carouselTrack"><div class="carousel-slide">
+                <img src="微信图片_20260903141318_250_1.jpg" alt="友发奖学金" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_250_1.jpg', '友发奖学金 — 2024-2025学年 · 天津仁爱学院')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>友发奖学金</h3>
+                        <p>2024-2025学年 · 天津仁爱学院</p>
+                    </div>
+                    <span class="carousel-badge gold">奖学金</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_251_1.jpg" alt="优秀班干部" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_251_1.jpg', '优秀班干部 — 2024-2025学年 · 天津仁爱学院')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>优秀班干部</h3>
+                        <p>2024-2025学年 · 天津仁爱学院</p>
+                    </div>
+                    <span class="carousel-badge ">校级</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_253_1.jpg" alt="优秀团干部" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_253_1.jpg', '优秀团干部 — 2025年5月 · 五四共青团表彰')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>优秀团干部</h3>
+                        <p>2025年5月 · 五四共青团表彰</p>
+                    </div>
+                    <span class="carousel-badge ">团组织</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_255_1.jpg" alt="国青杯艺术设计一等奖" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_255_1.jpg', '国青杯艺术设计一等奖 — 作品《多功能阅读台灯》· 智能产品设计')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>国青杯艺术设计一等奖</h3>
+                        <p>作品《多功能阅读台灯》· 智能产品设计</p>
+                    </div>
+                    <span class="carousel-badge gold">一等奖</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_256_1.jpg" alt="文化强国杯文学知识挑战赛一等奖" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_256_1.jpg', '文化强国杯文学知识挑战赛一等奖 — 2025年 · 全国高校文学知识挑战赛')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>文化强国杯文学知识挑战赛一等奖</h3>
+                        <p>2025年 · 全国高校文学知识挑战赛</p>
+                    </div>
+                    <span class="carousel-badge gold">一等奖</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_261_1.jpg" alt="人工智能+创新创业大赛一等奖" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_261_1.jpg', '人工智能+创新创业大赛一等奖 — 2025年 · 全国大学生创新创业大赛初赛')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>人工智能+创新创业大赛一等奖</h3>
+                        <p>2025年 · 全国大学生创新创业大赛初赛</p>
+                    </div>
+                    <span class="carousel-badge gold">一等奖</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_258_1.jpg" alt="杰出青年" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_258_1.jpg', '杰出青年 — 强国复兴有我 全国青年爱国宣传志愿行动')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>杰出青年</h3>
+                        <p>"强国复兴有我"全国青年爱国宣传志愿行动</p>
+                    </div>
+                    <span class="carousel-badge ">称号</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_254_1.jpg" alt="COP28全球青年零碳未来行动" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_254_1.jpg', 'COP28全球青年零碳未来行动 — 参与宣传工作 · 贡献青年力量')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>COP28全球青年零碳未来行动</h3>
+                        <p>参与宣传工作 · 贡献青年力量</p>
+                    </div>
+                    <span class="carousel-badge ">国际</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_260_1.jpg" alt="大熊猫守护计划" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_260_1.jpg', '大熊猫守护计划 — 全国高校公益项目 · 积极参与无私奉献')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>大熊猫守护计划</h3>
+                        <p>全国高校公益项目 · 积极参与无私奉献</p>
+                    </div>
+                    <span class="carousel-badge ">公益</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_252_1.jpg" alt="新媒体宣传组成员" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_252_1.jpg', '新媒体宣传组成员 — 智能交互专业 · 数智传媒与设计艺术学院')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>新媒体宣传组成员</h3>
+                        <p>智能交互专业 · 数智传媒与设计艺术学院</p>
+                    </div>
+                    <span class="carousel-badge ">聘书</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_257_1.jpg" alt="社会实践活动证书" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_257_1.jpg', '社会实践活动证书 — 文化强国杯 · 社会实践参与认证')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>社会实践活动证书</h3>
+                        <p>文化强国杯 · 社会实践参与认证</p>
+                    </div>
+                    <span class="carousel-badge ">实践</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_259_1.jpg" alt="荣誉证书" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_259_1.jpg', '荣誉证书 — 强国复兴有我 · 成绩优异表现突出')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>荣誉证书</h3>
+                        <p>"强国复兴有我" · 成绩优异表现突出</p>
+                    </div>
+                    <span class="carousel-badge ">荣誉</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_250_1.jpg" alt="友发奖学金" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_250_1.jpg', '友发奖学金 — 2024-2025学年 · 天津仁爱学院')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>友发奖学金</h3>
+                        <p>2024-2025学年 · 天津仁爱学院</p>
+                    </div>
+                    <span class="carousel-badge gold">奖学金</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_251_1.jpg" alt="优秀班干部" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_251_1.jpg', '优秀班干部 — 2024-2025学年 · 天津仁爱学院')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>优秀班干部</h3>
+                        <p>2024-2025学年 · 天津仁爱学院</p>
+                    </div>
+                    <span class="carousel-badge ">校级</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_253_1.jpg" alt="优秀团干部" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_253_1.jpg', '优秀团干部 — 2025年5月 · 五四共青团表彰')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>优秀团干部</h3>
+                        <p>2025年5月 · 五四共青团表彰</p>
+                    </div>
+                    <span class="carousel-badge ">团组织</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_255_1.jpg" alt="国青杯艺术设计一等奖" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_255_1.jpg', '国青杯艺术设计一等奖 — 作品《多功能阅读台灯》· 智能产品设计')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>国青杯艺术设计一等奖</h3>
+                        <p>作品《多功能阅读台灯》· 智能产品设计</p>
+                    </div>
+                    <span class="carousel-badge gold">一等奖</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_256_1.jpg" alt="文化强国杯文学知识挑战赛一等奖" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_256_1.jpg', '文化强国杯文学知识挑战赛一等奖 — 2025年 · 全国高校文学知识挑战赛')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>文化强国杯文学知识挑战赛一等奖</h3>
+                        <p>2025年 · 全国高校文学知识挑战赛</p>
+                    </div>
+                    <span class="carousel-badge gold">一等奖</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_261_1.jpg" alt="人工智能+创新创业大赛一等奖" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_261_1.jpg', '人工智能+创新创业大赛一等奖 — 2025年 · 全国大学生创新创业大赛初赛')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>人工智能+创新创业大赛一等奖</h3>
+                        <p>2025年 · 全国大学生创新创业大赛初赛</p>
+                    </div>
+                    <span class="carousel-badge gold">一等奖</span>
+                </div></div><div class="carousel-slide">
+                <img src="好创意证书.jpg" alt="好创意大赛二等奖" class="carousel-img" onclick="openLightbox('好创意证书.jpg', '好创意大赛二等奖 — 基于心流理论的沉浸式乐器陪练系统设计 · AI情感陪伴装置类 · 第20届天津赛区')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>好创意大赛二等奖</h3>
+                        <p>基于心流理论的沉浸式乐器陪练系统设计 · AI情感陪伴装置类 · 第20届天津赛区</p>
+                    </div>
+                    <span class="carousel-badge ">二等奖</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_258_1.jpg" alt="杰出青年" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_258_1.jpg', '杰出青年 — 强国复兴有我 全国青年爱国宣传志愿行动')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>杰出青年</h3>
+                        <p>"强国复兴有我"全国青年爱国宣传志愿行动</p>
+                    </div>
+                    <span class="carousel-badge ">称号</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_254_1.jpg" alt="COP28全球青年零碳未来行动" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_254_1.jpg', 'COP28全球青年零碳未来行动 — 参与宣传工作 · 贡献青年力量')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>COP28全球青年零碳未来行动</h3>
+                        <p>参与宣传工作 · 贡献青年力量</p>
+                    </div>
+                    <span class="carousel-badge ">国际</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_260_1.jpg" alt="大熊猫守护计划" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_260_1.jpg', '大熊猫守护计划 — 全国高校公益项目 · 积极参与无私奉献')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>大熊猫守护计划</h3>
+                        <p>全国高校公益项目 · 积极参与无私奉献</p>
+                    </div>
+                    <span class="carousel-badge ">公益</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_252_1.jpg" alt="新媒体宣传组成员" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_252_1.jpg', '新媒体宣传组成员 — 智能交互专业 · 数智传媒与设计艺术学院')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>新媒体宣传组成员</h3>
+                        <p>智能交互专业 · 数智传媒与设计艺术学院</p>
+                    </div>
+                    <span class="carousel-badge ">聘书</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_257_1.jpg" alt="社会实践活动证书" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_257_1.jpg', '社会实践活动证书 — 文化强国杯 · 社会实践参与认证')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>社会实践活动证书</h3>
+                        <p>文化强国杯 · 社会实践参与认证</p>
+                    </div>
+                    <span class="carousel-badge ">实践</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_259_1.jpg" alt="荣誉证书" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_259_1.jpg', '荣誉证书 — 强国复兴有我 · 成绩优异表现突出')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>荣誉证书</h3>
+                        <p>"强国复兴有我" · 成绩优异表现突出</p>
+                    </div>
+                    <span class="carousel-badge ">荣誉</span>
+                </div></div></div>
+            </div>
+            <button class="carousel-btn next" onclick="carouselMove(1)">›</button>
+            <div class="carousel-dots" id="carouselDots"><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot active"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div></div>
+        </div>
+    </section>
+
+    <!-- Work Detail Overlay -->
+    <div class="work-detail-overlay" id="workDetailOverlay">
+        <div class="work-detail-container" id="workDetailContainer">
+            <button class="work-detail-close" onclick="closeWorkDetail()">×</button>
+            <div class="work-detail-hero" id="workDetailHero">
+                <span class="work-detail-hero-emoji" id="workDetailHeroEmoji">💡</span>
+            </div>
+            <div class="work-detail-content">
+                <div class="work-detail-category" id="workDetailCategory">智能产品设计</div>
+                <h2 class="work-detail-title" id="workDetailTitle">作品名称</h2>
+                <div class="work-detail-tags" id="workDetailTags"></div>
+                <div class="work-detail-section">
+                    <div class="work-detail-section-title">项目简介</div>
+                    <div class="work-detail-placeholder">
+                        内容待补充<br>
+                        <span style="font-size:0.75rem;opacity:0.6;">后续将完善作品详细介绍、设计理念、设计过程等内容</span>
+                    </div>
+                </div>
+                <div class="work-detail-section">
+                    <div class="work-detail-section-title">设计亮点</div>
+                    <div class="work-detail-placeholder">
+                        内容待补充
+                    </div>
+                </div>
+                <div class="work-detail-section">
+                    <div class="work-detail-section-title">设计过程</div>
+                    <div class="work-detail-placeholder">
+                        内容待补充
+                    </div>
+                </div>
+            </div>
+            <div class="work-detail-nav">
+                <button class="work-detail-nav-btn" id="workPrevBtn" onclick="navWork(-1)">← 上一个作品</button>
+                <button class="work-detail-nav-btn" id="workNextBtn" onclick="navWork(1)">下一个作品 →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightboxClose">×</button>
+        <img class="lightbox-content" id="lightboxImg" src="" alt="">
+        <div class="lightbox-caption" id="lightboxCaption"></div>
+    </div>
+
+    <!-- Philosophy -->
+    <section id="philosophy">
+        <div class="section-label reveal">PERSONAL PHILOSOPHY</div>
+        <h2 class="section-title reveal">个人<span class="accent">理念</span></h2>
+        <div class="philosophy-container">
+            <div class="quote-cards">
+                <div class="quote-card reveal">
+                    <p class="quote-text">心有所信，方能行远。坚定理想信念，筑牢思想根基，在每一次组织与学习中同步收获成长。</p>
+                    <p class="quote-attr">— 我的信条</p>
+                </div>
+                <div class="quote-card reveal reveal-delay-1">
+                    <p class="quote-text">学所以益才也，砺所以致刃也。保持学习能力，兼顾求知深度与广度，在实践创新中学会合作。</p>
+                    <p class="quote-attr">— 关于学习</p>
+                </div>
+                <div class="quote-card reveal reveal-delay-2">
+                    <p class="quote-text">纸上得来终觉浅，绝知此事要躬行。不给自己设限，尽情尝试和探索，在实践中施展才华。</p>
+                    <p class="quote-attr">— 关于实践</p>
+                </div>
+                <div class="quote-card reveal reveal-delay-3">
+                    <p class="quote-text">道阻且长，行则将至。以乐观之心面对成败得失，以包容之心接受差异多元，以感恩之心涵养岁月真情。</p>
+                    <p class="quote-attr">— 关于前行</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline -->
+    <section id="timeline">
+        <div class="section-label reveal">JOURNEY</div>
+        <h2 class="section-title reveal">成长<span class="accent">历程</span></h2>
+        <div class="timeline">
+            <div class="timeline-item reveal">
+                <div class="timeline-content">
+                    <div class="timeline-date">2024.10</div>
+                    <div class="timeline-title">"强国复兴有我" 全国青年爱国宣传志愿行动</div>
+                    <div class="timeline-desc">荣获"杰出青年"称号，积极参与爱国宣传志愿工作</div>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-content">
+                    <div class="timeline-date">2024.11</div>
+                    <div class="timeline-title">全国高校大熊猫守护计划</div>
+                    <div class="timeline-desc">积极参与公益项目，为大熊猫保护贡献力量</div>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-content">
+                    <div class="timeline-date">2025.05</div>
+                    <div class="timeline-title">优秀团干部 · 五四共青团表彰</div>
+                    <div class="timeline-desc">在共青团工作中表现突出，获评优秀团干部</div>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-content">
+                    <div class="timeline-date">2025.06</div>
+                    <div class="timeline-title">国青杯艺术设计作品一等奖</div>
+                    <div class="timeline-desc">作品《多功能阅读台灯》获国青杯智能产品设计一等奖</div>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-content">
+                    <div class="timeline-date">2025.06</div>
+                    <div class="timeline-title">文化强国杯全国高校文学知识挑战赛一等奖</div>
+                    <div class="timeline-desc">成绩优异，荣获一等奖</div>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-content">
+                    <div class="timeline-date">2025.08</div>
+                    <div class="timeline-title">全国大学生"人工智能+"创新创业大赛一等奖</div>
+                    <div class="timeline-desc">在初赛中成绩优异，荣获一等奖</div>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-content">
+                    <div class="timeline-date">2026.08</div>
+                    <div class="timeline-title">好创意大赛二等奖</div>
+                    <div class="timeline-desc">作品《基于心流理论的沉浸式乐器陪练系统设计》· AI情感陪伴装置类 · 第20届天津赛区</div>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-content">
+                    <div class="timeline-date">2025.07</div>
+                    <div class="timeline-title">华灿杯设计竞赛</div>
+                    <div class="timeline-desc">参加华灿杯设计竞赛，持续在设计赛道探索突破</div>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-content">
+                    <div class="timeline-date">2025.12</div>
+                    <div class="timeline-title">友发奖学金 · 优秀班干部</div>
+                    <div class="timeline-desc">2024-2025学年获友发奖学金及优秀班干部荣誉称号</div>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-quote">道阻且长 · 行则将至</div>
+        <div class="footer-line"></div>
+        <p class="footer-text">贾梦晴 · 天津仁爱学院 · 数智传媒与设计艺术学院</p>
+        <p class="footer-text" style="margin-top: 8px; opacity: 0.5;">© 2026 JMQ Personal Blog</p>
+    </footer>
+
+    <script>
+        // Mobile Nav Toggle
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.getElementById('navLinks');
+        navToggle.addEventListener('click', () => {
+            navToggle.classList.toggle('active');
+            navLinks.classList.toggle('open');
+        });
+        navLinks.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => {
+                navToggle.classList.remove('active');
+                navLinks.classList.remove('open');
+            });
+        });
+
+        // Scroll Progress & Navbar
+        const scrollProgress = document.getElementById('scrollProgress');
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            scrollProgress.style.width = (scrollTop / docHeight) * 100 + '%';
+            if (scrollTop > 60) {
+                navbar.classList.add('scrolled');
+                navToggle.classList.remove('dark');
+            } else {
+                navbar.classList.remove('scrolled');
+                navToggle.classList.add('dark');
+            }
+        });
+        // Init nav state on load
+        if (window.scrollY <= 60) { navToggle.classList.add('dark'); }
+        else { navbar.classList.add('scrolled'); }
+
+        // Scroll Reveal
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // Animated Counters
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const target = parseInt(el.dataset.target);
+                    const suffix = el.dataset.suffix || '';
+                    let current = 0;
+                    const increment = target / 40;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) { current = target; clearInterval(timer); }
+                        el.textContent = Math.floor(current) + suffix;
+                    }, 30);
+                    counterObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0.5 });
+        document.querySelectorAll('.stat-number').forEach(el => counterObserver.observe(el));
+
+        // Skill Bars
+        const skillObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const bar = entry.target;
+                    bar.style.width = bar.dataset.width + '%';
+                    skillObserver.unobserve(bar);
+                }
+            });
+        }, { threshold: 0.3 });
+        document.querySelectorAll('.skill-fill').forEach(el => skillObserver.observe(el));
+
+        // ========== Hero Mouse Parallax ==========
+        const heroBeam = document.getElementById('heroBeam');
+        const heroRight = document.getElementById('heroRight');
+        const heroSection = document.querySelector('.hero');
+
+        heroSection.addEventListener('mousemove', (e) => {
+            const rect = heroSection.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+            heroBeam.style.transform = `translate(${x * 30}px, ${y * 20}px)`;
+            heroRight.style.transform = `translate(${x * -15}px, ${y * -10}px)`;
+
+            document.querySelectorAll('.float-card').forEach((card, i) => {
+                const factor = (i + 1) * 8;
+                card.style.marginLeft = (x * factor) + 'px';
+                card.style.marginTop = (y * factor) + 'px';
+            });
+        });
+
+        heroSection.addEventListener('mouseleave', () => {
+            heroBeam.style.transform = '';
+            heroRight.style.transform = '';
+            document.querySelectorAll('.float-card').forEach(card => {
+                card.style.marginLeft = '';
+                card.style.marginTop = '';
+            });
+        });
+
+        // Hero scroll fade
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+            const heroInner = document.querySelector('.hero-inner');
+            if (heroInner && scrolled < window.innerHeight) {
+                const progress = scrolled / window.innerHeight;
+                heroInner.style.opacity = progress < 0.3 ? 1 : 1 - (progress - 0.3) / 0.6;
+                heroInner.style.transform = `translateY(${scrolled * 0.1}px)`;
+            }
+        });
+
+        // ========== Magnetic Buttons ==========
+        document.querySelectorAll('.btn-primary, .btn-secondary').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px) translateY(-2px)`;
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = '';
+            });
+        });
+
+        // ========== 3D Tilt on Project Cards ==========
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const rx = (y - rect.height / 2) / 25;
+                const ry = (rect.width / 2 - x) / 25;
+                card.style.transform = `perspective(600px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-6px)`;
+            });
+            card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+        });
+
+        // ========== Nav Active State on Scroll ==========
+        const sections = document.querySelectorAll('section[id]');
+        const navLinkItems = document.querySelectorAll('.nav-links a');
+        const navObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    navLinkItems.forEach(link => {
+                        link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+                    });
+                }
+            });
+        }, { threshold: 0.3 });
+        sections.forEach(s => navObserver.observe(s));
+
+        // ========== Smooth Anchor Scroll with Offset ==========
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    const offset = 70;
+                    window.scrollTo({ top: target.offsetTop - offset, behavior: 'smooth' });
+                }
+            });
+        });
+
+        // ========== Awards Carousel ==========
+        const awards = [
+            { img: '微信图片_20260903141318_250_1.jpg', title: '友发奖学金', desc: '2024-2025学年 · 天津仁爱学院', badge: '奖学金', gold: true },
+            { img: '微信图片_20260903141318_251_1.jpg', title: '优秀班干部', desc: '2024-2025学年 · 天津仁爱学院', badge: '校级', gold: false },
+            { img: '微信图片_20260903141318_253_1.jpg', title: '优秀团干部', desc: '2025年5月 · 五四共青团表彰', badge: '团组织', gold: false },
+            { img: '微信图片_20260903141318_255_1.jpg', title: '国青杯艺术设计一等奖', desc: '作品《多功能阅读台灯》· 智能产品设计', badge: '一等奖', gold: true },
+            { img: '微信图片_20260903141318_256_1.jpg', title: '文化强国杯文学知识挑战赛一等奖', desc: '2025年 · 全国高校文学知识挑战赛', badge: '一等奖', gold: true },
+            { img: '微信图片_20260903141318_261_1.jpg', title: '人工智能+创新创业大赛一等奖', desc: '2025年 · 全国大学生创新创业大赛初赛', badge: '一等奖', gold: true },
+            { img: '好创意证书.jpg', title: '好创意大赛二等奖', desc: '基于心流理论的沉浸式乐器陪练系统设计 · AI情感陪伴装置类 · 第20届天津赛区', badge: '二等奖', gold: false },
+            { img: '微信图片_20260903141318_255_1.jpg', title: '华灿杯设计竞赛', desc: '2025年7月 · 持续在设计赛道探索突破', badge: '竞赛', gold: false },
+            { img: '微信图片_20260903141318_258_1.jpg', title: '杰出青年', desc: '"强国复兴有我"全国青年爱国宣传志愿行动', badge: '称号', gold: false },
+            { img: '微信图片_20260903141318_254_1.jpg', title: 'COP28全球青年零碳未来行动', desc: '参与宣传工作 · 贡献青年力量', badge: '国际', gold: false },
+            { img: '微信图片_20260903141318_260_1.jpg', title: '大熊猫守护计划', desc: '全国高校公益项目 · 积极参与无私奉献', badge: '公益', gold: false },
+            { img: '微信图片_20260903141318_252_1.jpg', title: '新媒体宣传组成员', desc: '智能交互专业 · 数智传媒与设计艺术学院', badge: '聘书', gold: false },
+            { img: '微信图片_20260903141318_257_1.jpg', title: '社会实践活动证书', desc: '文化强国杯 · 社会实践参与认证', badge: '实践', gold: false },
+            { img: '微信图片_20260903141318_259_1.jpg', title: '荣誉证书', desc: '"强国复兴有我" · 成绩优异表现突出', badge: '荣誉', gold: false },
+        ];
+
+        const track = document.getElementById('carouselTrack');
+        const dotsContainer = document.getElementById('carouselDots');
+        let currentSlide = 0;
+        let autoPlayTimer;
+
+        // Clear static HTML slides, use JS data only
+        track.innerHTML = '';
+        dotsContainer.innerHTML = '';
+        track.style.transform = 'translateX(0)';
+
+        awards.forEach((award, i) => {
+            const slide = document.createElement('div');
+            slide.className = 'carousel-slide';
+            slide.innerHTML = `
+                <img src="${award.img}" alt="${award.title}" class="carousel-img" onclick="openLightbox('${award.img}', '${award.title} — ${award.desc}')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>${award.title}</h3>
+                        <p>${award.desc}</p>
+                    </div>
+                    <span class="carousel-badge ${award.gold ? 'gold' : ''}">${award.badge}</span>
+                </div>`;
+            track.appendChild(slide);
+
+            const dot = document.createElement('div');
+            dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+            dot.onclick = () => goToSlide(i);
+            dotsContainer.appendChild(dot);
+        });
+
+        function updateCarousel() {
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            document.querySelectorAll('.carousel-dot').forEach((d, i) => {
+                d.classList.toggle('active', i === currentSlide);
+            });
+        }
+
+        function carouselMove(dir) {
+            currentSlide = (currentSlide + dir + awards.length) % awards.length;
+            updateCarousel();
+            resetAutoPlay();
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateCarousel();
+            resetAutoPlay();
+        }
+
+        function startAutoPlay() {
+            autoPlayTimer = setInterval(() => {
+                currentSlide = (currentSlide + 1) % awards.length;
+                updateCarousel();
+            }, 4000);
+        }
+
+        function resetAutoPlay() {
+            clearInterval(autoPlayTimer);
+            startAutoPlay();
+        }
+
+        startAutoPlay();
+
+        let touchStartX = 0;
+        track.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+        track.addEventListener('touchend', (e) => {
+            const diff = touchStartX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) carouselMove(diff > 0 ? 1 : -1);
+        });
+
+        // Lightbox
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxCaption = document.getElementById('lightboxCaption');
+        const lightboxClose = document.getElementById('lightboxClose');
+
+        function openLightbox(src, caption) {
+            lightboxImg.src = src;
+            lightboxCaption.textContent = caption;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (document.getElementById('workDetailOverlay').classList.contains('active')) {
+                    closeWorkDetail();
+                } else {
+                    closeLightbox();
+                }
+            }
+            if (document.getElementById('workDetailOverlay').classList.contains('active')) {
+                if (e.key === 'ArrowLeft') navWork(-1);
+                if (e.key === 'ArrowRight') navWork(1);
+            } else {
+                if (e.key === 'ArrowLeft') carouselMove(-1);
+                if (e.key === 'ArrowRight') carouselMove(1);
+            }
+        });
+
+        // ========== Work Detail ==========
+        const works = [
+            {
+                emoji: '💡',
+                category: '智能产品设计',
+                title: '多功能阅读台灯',
+                tags: ['产品设计', '智能交互', '国青杯一等奖'],
+                heroClass: 'work-thumb-1'
+            },
+            {
+                emoji: '🍵',
+                category: '文化创意设计',
+                title: '苗风保温杯',
+                tags: ['文创设计', '民族文化', '产品设计'],
+                heroClass: 'work-thumb-2'
+            },
+            {
+                emoji: '♿',
+                category: '适老化设计',
+                title: '适老化轮椅升降机',
+                tags: ['适老化', '无障碍', '机械设计'],
+                heroClass: 'work-thumb-3'
+            },
+            {
+                emoji: '🥽',
+                category: 'VR体验设计',
+                title: '基于VR的农业技术体验设计',
+                tags: ['VR/AR', '体验设计', '农业科技'],
+                heroClass: 'work-thumb-4'
+            },
+            {
+                emoji: '🤖',
+                category: '智能装备设计',
+                title: '农用机器人多载荷模块化产品设计',
+                tags: ['机器人', '模块化', '智慧农业'],
+                heroClass: 'work-thumb-5'
+            },
+            {
+                emoji: '🚁',
+                category: '应急装备设计',
+                title: '丛林灭火无人机',
+                tags: ['无人机', '应急救援', '概念设计'],
+                heroClass: 'work-thumb-6'
+            },
+            {
+                emoji: '🌲',
+                category: '疗愈场景设计',
+                title: '塞罕坝环境疗愈设计',
+                tags: ['疗愈设计', '环境设计', '服务设计'],
+                heroClass: 'work-thumb-7'
+            }
+        ];
+
+        let currentWorkIndex = 0;
+
+        function openWorkDetail(index) {
+            currentWorkIndex = index;
+            updateWorkDetail();
+            const overlay = document.getElementById('workDetailOverlay');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            document.getElementById('workDetailContainer').scrollTop = 0;
+        }
+
+        function closeWorkDetail() {
+            document.getElementById('workDetailOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function navWork(dir) {
+            const newIndex = currentWorkIndex + dir;
+            if (newIndex < 0 || newIndex >= works.length) return;
+            currentWorkIndex = newIndex;
+            updateWorkDetail();
+            document.getElementById('workDetailContainer').scrollTop = 0;
+        }
+
+        function updateWorkDetail() {
+            const work = works[currentWorkIndex];
+            document.getElementById('workDetailHeroEmoji').textContent = work.emoji;
+            document.getElementById('workDetailCategory').textContent = work.category;
+            document.getElementById('workDetailTitle').textContent = work.title;
+            const hero = document.getElementById('workDetailHero');
+            hero.className = 'work-detail-hero ' + work.heroClass.replace('work-thumb', 'work-thumb');
+            // Apply gradient background
+            const gradients = [
+                'linear-gradient(135deg, #fef3e2, #fce8c8)',
+                'linear-gradient(135deg, #f0e6d3, #e8d5b7)',
+                'linear-gradient(135deg, #e8f0e8, #d4e4d4)',
+                'linear-gradient(135deg, #e6e0f0, #d0c4e0)',
+                'linear-gradient(135deg, #e0ebe0, #c8dcc8)',
+                'linear-gradient(135deg, #f0e0e0, #e0c8c8)',
+                'linear-gradient(135deg, #e0ebe8, #c8dcd4)'
+            ];
+            hero.style.background = gradients[currentWorkIndex];
+
+            const tagsContainer = document.getElementById('workDetailTags');
+            tagsContainer.innerHTML = work.tags.map(t => `<span class="work-detail-tag">${t}</span>`).join('');
+
+            document.getElementById('workPrevBtn').disabled = currentWorkIndex === 0;
+            document.getElementById('workNextBtn').disabled = currentWorkIndex === works.length - 1;
+        }
+
+        // Close work detail on overlay click
+        document.getElementById('workDetailOverlay').addEventListener('click', (e) => {
+            if (e.target.id === 'workDetailOverlay') closeWorkDetail();
+        });
+    </script>
+
+
+
+</body></html>
