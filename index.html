@@ -91,7 +91,6 @@
         .nav-toggle {
             display: none; cursor: pointer; z-index: 101;
             width: 36px; height: 36px; position: relative;
-            border: 0; background: transparent;
         }
         .nav-toggle span {
             display: block; position: absolute; height: 2px; width: 22px;
@@ -385,21 +384,6 @@
             font-family: 'Helvetica Neue', sans-serif; background: var(--bg-card);
         }
         .tag:hover { border-color: var(--accent); color: var(--hero-dark); transform: translateY(-2px); }
-        .personality-proof {
-            display: inline-flex; align-items: center; gap: 10px;
-            margin-top: 18px; padding: 9px 14px;
-            border: 1px solid var(--border); border-radius: 24px;
-            background: var(--bg-card); color: var(--text-secondary);
-            font: inherit; font-size: 0.78rem; cursor: pointer;
-            transition: all 0.3s var(--ease);
-        }
-        .personality-proof:hover, .personality-proof:focus-visible {
-            border-color: var(--accent); color: var(--hero-dark);
-            transform: translateY(-2px); outline: none;
-        }
-        .personality-proof img {
-            width: 34px; height: 34px; border-radius: 50%; object-fit: cover;
-        }
 
         /* Stats */
         .stats { display: flex; justify-content: center; gap: 90px; flex-wrap: wrap; }
@@ -536,6 +520,7 @@
         .work-thumb-5 { background: linear-gradient(135deg, #e0ebe0, #c8dcc8); }
         .work-thumb-6 { background: linear-gradient(135deg, #f0e0e0, #e0c8c8); }
         .work-thumb-7 { background: linear-gradient(135deg, #e0ebe8, #c8dcd4); }
+        .work-thumb-8 { background: linear-gradient(135deg, #ede0f0, #d0c0e0); }
         .work-emoji { font-size: 3rem; position: relative; z-index: 1; transition: transform 0.5s var(--ease); }
         .work-card:hover .work-emoji { transform: scale(1.2) rotate(-5deg); }
         .work-info { padding: 20px 22px 24px; flex: 1; display: flex; flex-direction: column; }
@@ -567,8 +552,79 @@
             transition: all 0.3s var(--ease); opacity: 0; transform: translateX(-10px);
         }
         .work-card:hover .work-arrow { opacity: 1; transform: translateX(0); background: var(--hero-dark); color: #fff; border-color: var(--hero-dark); }
+        .work-thumb-img {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover; z-index: 0;
+        }
+        .work-thumb-overlay {
+            position: absolute; inset: 0; z-index: 2;
+            background: linear-gradient(180deg, transparent 50%, rgba(26,26,26,0.5) 100%);
+            display: flex; align-items: flex-end; justify-content: center;
+            padding-bottom: 12px;
+        }
+        .work-thumb-emoji {
+            font-size: 2.4rem; position: relative; z-index: 3;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+            transition: transform 0.5s var(--ease);
+        }
+        .work-card:hover .work-thumb-emoji { transform: scale(1.2) rotate(-5deg); }
 
         /* Work Detail Overlay */
+        .work-detail-hero-img {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover; z-index: 0;
+        }
+        .work-detail-hero-overlay {
+            position: absolute; inset: 0; z-index: 1;
+            background: linear-gradient(180deg, transparent 40%, rgba(26,26,26,0.6) 100%);
+        }
+        .work-detail-gallery {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px; margin-top: 16px;
+        }
+        .work-detail-gallery-item {
+            width: 100%; height: 160px; object-fit: cover;
+            border-radius: 8px; cursor: pointer;
+            transition: transform 0.3s var(--ease);
+            border: 1px solid var(--border);
+        }
+        .work-detail-gallery-item:hover { transform: scale(1.03); }
+        .work-detail-highlight-list {
+            list-style: none; padding: 0; margin: 0;
+        }
+        .work-detail-highlight-item {
+            font-size: 0.95rem; color: #000000; line-height: 1.8; font-weight: 500;
+            font-family: 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            padding: 12px 0 12px 28px; position: relative;
+            border-bottom: 1px solid var(--border);
+        }
+        .work-detail-highlight-item:last-child { border-bottom: none; }
+        .work-detail-highlight-item::before {
+            content: '◆'; position: absolute; left: 0; top: 10px;
+            color: var(--accent); font-size: 0.7rem;
+        }
+        .work-detail-process-list {
+            list-style: none; padding: 0; margin: 0;
+            counter-reset: step;
+        }
+        .work-detail-process-item {
+            font-size: 0.95rem; color: #000000; line-height: 1.8; font-weight: 500;
+            font-family: 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            padding: 12px 0 12px 40px; position: relative;
+        }
+        .work-detail-process-item::before {
+            counter-increment: step; content: counter(step);
+            position: absolute; left: 0; top: 8px;
+            width: 22px; height: 22px; border-radius: 50%;
+            background: var(--hero-dark); color: #fff;
+            font-size: 0.7rem; display: flex; align-items: center; justify-content: center;
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+        .work-detail-process-item::after {
+            content: ''; position: absolute; left: 10px; top: 32px;
+            width: 1px; height: calc(100% - 20px); background: var(--border);
+        }
+        .work-detail-process-item:last-child::after { display: none; }
         .work-detail-overlay {
             position: fixed; inset: 0; z-index: 100;
             background: rgba(26,10,10,0.6); backdrop-filter: blur(8px);
@@ -579,7 +635,7 @@
         }
         .work-detail-overlay.active { opacity: 1; visibility: visible; }
         .work-detail-container {
-            background: var(--bg-page); width: 100%; max-width: 1000px;
+            background: #ffffff; width: 100%; max-width: 1000px;
             max-height: 90vh; overflow-y: auto;
             border-radius: 12px; position: relative;
             transform: translateY(40px) scale(0.95);
@@ -597,7 +653,7 @@
         }
         .work-detail-close:hover { background: var(--hero-dark); color: #fff; transform: rotate(90deg); }
         .work-detail-hero {
-            height: 240px; display: flex; align-items: center; justify-content: center;
+            height: 320px; display: flex; align-items: center; justify-content: center;
             position: relative; overflow: hidden;
             border-radius: 12px 12px 0 0;
         }
@@ -622,16 +678,16 @@
             margin-bottom: 32px;
         }
         .work-detail-section-title {
-            font-size: 0.85rem; color: var(--text-primary); font-weight: bold;
-            margin-bottom: 12px; display: flex; align-items: center; gap: 10px;
+            font-size: 1rem; color: var(--text-primary); font-weight: bold;
+            margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
             letter-spacing: 1px;
         }
         .work-detail-section-title::before {
             content: ''; width: 3px; height: 16px; background: var(--hero-dark); border-radius: 2px;
         }
         .work-detail-section-text {
-            font-size: 0.85rem; color: var(--text-muted); line-height: 1.8;
-            font-family: 'Helvetica Neue', sans-serif;
+            font-size: 0.95rem; color: #000000; line-height: 1.9; font-weight: 500;
+            font-family: 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
         }
         .work-detail-placeholder {
             background: var(--bg-soft); border: 1px dashed var(--border);
@@ -665,14 +721,6 @@
         .carousel-img {
             width: 100%; max-height: 560px; object-fit: contain; background: var(--bg-soft);
             transition: transform 0.4s var(--ease);
-        }
-        .carousel-placeholder {
-            min-height: 360px; display: grid; place-items: center;
-            background:
-                linear-gradient(135deg, rgba(212,160,23,0.08), rgba(154,27,30,0.08)),
-                repeating-linear-gradient(45deg, transparent 0 18px, rgba(212,160,23,0.06) 18px 19px);
-            color: var(--text-muted); cursor: default;
-            font-size: 1rem; letter-spacing: 4px;
         }
         .carousel-slide:hover .carousel-img { transform: scale(1.02); }
         .carousel-info {
@@ -859,14 +907,10 @@
                 width: 70%; height: 100vh;
                 background: var(--bg); flex-direction: column;
                 padding: 80px 30px 30px; gap: 0;
-                visibility: hidden; pointer-events: none;
-                transition: right 0.4s var(--ease), visibility 0s linear 0.4s;
+                transition: right 0.4s var(--ease);
                 box-shadow: -4px 0 30px rgba(0,0,0,0.08);
             }
-            .nav-links.open {
-                right: 0; visibility: visible; pointer-events: auto;
-                transition: right 0.4s var(--ease), visibility 0s;
-            }
+            .nav-links.open { right: 0; }
             .nav-links li { width: 100%; border-bottom: 1px solid var(--border); }
             .nav-links a { display: block; padding: 16px 0; font-size: 0.95rem; }
             .nav-links a::after { display: none; }
@@ -1054,6 +1098,158 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0.4; }
         }
+
+        /* ========== Dynamic Interactive Effects ========== */
+
+        /* About: 3D tilt + text word reveal */
+        .about-container { perspective: 1000px; }
+        .about-text { transition: transform 0.4s var(--ease); transform-style: preserve-3d; }
+        .about-text p { overflow: hidden; }
+        .about-text p span.word-reveal {
+            display: inline-block; opacity: 0; transform: translateY(20px);
+            transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+        }
+        .about-text p span.word-reveal.visible { opacity: 1; transform: translateY(0); }
+        .tag {
+            position: relative; overflow: hidden;
+        }
+        .tag::before {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            width: 0; height: 0; border-radius: 50%;
+            background: var(--accent-dim);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s var(--ease), height 0.5s var(--ease);
+        }
+        .tag:hover::before { width: 200px; height: 200px; }
+        .tag:hover { transform: translateY(-4px) scale(1.05); background: var(--bg-soft); }
+
+        /* Skills: mouse-following highlight + bar glow */
+        .skill-bar { position: relative; cursor: pointer; }
+        .skill-bar::before {
+            content: ''; position: absolute; inset: 0; border-radius: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-bright), transparent);
+            background-size: 200% 100%; background-position: -100% 0;
+            opacity: 0; transition: opacity 0.3s; pointer-events: none;
+        }
+        .skill-bar:hover::before {
+            opacity: 0.4;
+            animation: skillBarShine 1.5s linear infinite;
+        }
+        @keyframes skillBarShine {
+            from { background-position: -100% 0; }
+            to { background-position: 200% 0; }
+        }
+        .skill-row:hover .skill-fill {
+            box-shadow: 0 0 12px rgba(196,38,43,0.3);
+        }
+        .skill-tag {
+            display: inline-block;
+        }
+        .skill-tag:hover {
+            animation: tagWiggle 0.4s var(--ease);
+        }
+        @keyframes tagWiggle {
+            0%, 100% { transform: rotate(0) scale(1); }
+            25% { transform: rotate(-3deg) scale(1.1); }
+            75% { transform: rotate(3deg) scale(1.1); }
+        }
+
+        /* Works: 3D tilt + image zoom + shine sweep */
+        .work-card { transform-style: preserve-3d; will-change: transform; transition: transform 0.15s var(--ease), box-shadow 0.4s var(--ease), border-color 0.4s var(--ease); }
+        .work-thumb { position: relative; }
+        .work-thumb-img { transition: transform 0.6s var(--ease); }
+        .work-card:hover .work-thumb-img { transform: scale(1.1); }
+        .work-card::after {
+            content: ''; position: absolute; top: 0; left: -100%;
+            width: 60%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            transition: left 0.6s var(--ease); pointer-events: none; z-index: 5;
+        }
+        .work-card:hover::after { left: 130%; }
+        .work-card:hover .work-category { color: var(--hero-dark); }
+        .work-title { transition: color 0.3s; }
+        .work-card:hover .work-title { color: var(--hero-dark); }
+
+        /* Awards: slide 3D effect + badge pop */
+        .carousel-slide { transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease); }
+        .carousel-slide:hover {
+            transform: translateY(-6px) rotateX(3deg);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+        }
+        .carousel-img { transition: transform 0.5s var(--ease); }
+        .carousel-slide:hover .carousel-img { transform: scale(1.05); }
+        .carousel-badge {
+            transition: transform 0.3s var(--ease);
+        }
+        .carousel-slide:hover .carousel-badge {
+            transform: scale(1.15) rotate(-5deg);
+        }
+
+        /* Philosophy: mouse parallax floating */
+        .quote-card {
+            transition: transform 0.3s var(--ease), box-shadow 0.4s var(--ease);
+            will-change: transform;
+        }
+        .quote-card:hover {
+            box-shadow: 0 12px 36px rgba(154,27,30,0.1);
+        }
+        .quote-text { transition: color 0.3s; }
+        .quote-card:hover .quote-text { color: var(--text-primary); }
+
+        /* Timeline: dot pulse + card expand */
+        .timeline-dot {
+            position: relative;
+        }
+        .timeline-dot::before {
+            content: ''; position: absolute; inset: -4px; border-radius: 50%;
+            border: 2px solid var(--accent); opacity: 0;
+            animation: dotPulse 2s ease infinite;
+        }
+        .timeline-item:hover .timeline-dot::before { opacity: 1; }
+        @keyframes dotPulse {
+            0% { transform: scale(1); opacity: 0.6; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+        .timeline-item:nth-child(odd):hover .timeline-content {
+            transform: translateX(10px) scale(1.03);
+            box-shadow: 0 8px 24px rgba(154,27,30,0.1);
+        }
+        .timeline-item:nth-child(even):hover .timeline-content {
+            transform: translateX(-10px) scale(1.03);
+            box-shadow: 0 8px 24px rgba(154,27,30,0.1);
+        }
+        .timeline-date { transition: color 0.3s; }
+        .timeline-item:hover .timeline-date { color: var(--hero-dark); }
+
+        /* Footer: gradient line expand */
+        .footer-line {
+            position: relative; overflow: hidden;
+        }
+        .footer-line::after {
+            content: ''; position: absolute; top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, var(--accent-bright), transparent);
+            animation: footerLineShine 4s ease infinite;
+        }
+        @keyframes footerLineShine {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+        .footer-quote { transition: text-shadow 0.4s; }
+        .footer-quote:hover {
+            text-shadow: 0 0 20px var(--accent-dim);
+        }
+
+        /* Section label slide-in enhancement */
+        .section-label::before { transition: width 0.5s var(--ease); }
+        .section-label:hover::before { width: 60px; }
+
+        /* Award slide stagger fade */
+        .carousel-slide { animation: slideFadeIn 0.5s var(--ease) backwards; }
+        @keyframes slideFadeIn {
+            from { opacity: 0.5; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
     </style>
 </head>
 <body>
@@ -1074,7 +1270,7 @@
             <li><a href="#philosophy">个人理念</a></li>
             <li><a href="#timeline">成长历程</a></li>
         </ul>
-        <button class="nav-toggle" id="navToggle" type="button" aria-label="打开导航菜单" aria-controls="navLinks" aria-expanded="false"><span></span><span></span><span></span></button>
+        <div class="nav-toggle" id="navToggle"><span></span><span></span><span></span></div>
     </nav>
 
     <!-- Hero -->
@@ -1150,10 +1346,6 @@
                     <span class="tag">好创意大赛</span>
                     <span class="tag">华灿杯</span>
                 </div>
-                <button class="personality-proof" type="button" onclick="openLightbox('personality-istp-t.jpg', '16Personalities 测试结果 · ISTP-T 鉴赏家')">
-                    <img src="personality-istp-t.jpg" alt="" aria-hidden="true">
-                    查看 ISTP-T 人格测试结果
-                </button>
             </div>
         </div>
     </section>
@@ -1192,7 +1384,7 @@
             <div class="skill-row reveal visible">
                 <div class="skill-header"><span class="skill-name">智能产品设计</span><span class="skill-level">90%</span></div>
                 <div class="skill-bar"><div class="skill-fill" data-width="90" style="width: 90%;"></div></div>
-                <div class="skill-tags-row"><span class="skill-tag">多功能阅读台灯</span><span class="skill-tag">适老化轮椅升降机</span><span class="skill-tag">苗风保温杯</span><span class="skill-tag">丛林灭火无人机</span></div>
+                <div class="skill-tags-row"><span class="skill-tag">多功能智能阅读台灯</span><span class="skill-tag">适老化轮椅升降机</span><span class="skill-tag">民族文创设计</span><span class="skill-tag">丛林灭火无人机</span></div>
             </div>
             <div class="skill-row reveal reveal-delay-1 visible">
                 <div class="skill-header"><span class="skill-name">交互设计</span><span class="skill-level">85%</span></div>
@@ -1229,30 +1421,30 @@
         <h2 class="section-title reveal">我的<span class="accent">作品</span></h2>
         <p class="section-subtitle reveal">精选设计作品，点击查看详情</p>
         <div class="works-grid">
-            <div class="work-card reveal" role="button" tabindex="0" onclick="openWorkDetail(0)" onkeydown="handleWorkCardKey(event, 0)">
+            <div class="work-card reveal" onclick="openWorkDetail(0)">
                 <div class="work-thumb work-thumb-1">
-                    <span class="work-emoji">💡</span>
+                    <img src="preview_work_1.jpg" alt="多功能智能阅读台灯" class="work-thumb-img">
                 </div>
                 <div class="work-info">
                     <div class="work-category">智能产品设计</div>
-                    <h3 class="work-title">多功能阅读台灯</h3>
-                    <p class="work-desc">国青杯艺术设计一等奖作品，融合护眼照明与智能交互</p>
+                    <h3 class="work-title">多功能智能阅读台灯</h3>
+                    <p class="work-desc">国青杯艺术设计一等奖作品，将台灯与阅读架创新融合，实现"一机多用"</p>
                     <div class="work-tags">
                         <span class="work-tag">产品设计</span>
                         <span class="work-tag">智能交互</span>
-                        <span class="work-tag">一等奖</span>
+                        <span class="work-tag">国青杯一等奖</span>
                     </div>
                 </div>
                 <div class="work-arrow">→</div>
             </div>
-            <div class="work-card reveal reveal-delay-1" role="button" tabindex="0" onclick="openWorkDetail(1)" onkeydown="handleWorkCardKey(event, 1)">
+            <div class="work-card reveal reveal-delay-1" onclick="openWorkDetail(1)">
                 <div class="work-thumb work-thumb-2">
-                    <span class="work-emoji">🍵</span>
+                    <img src="preview_work_2.jpg" alt="民族文创设计" class="work-thumb-img">
                 </div>
                 <div class="work-info">
                     <div class="work-category">文化创意设计</div>
-                    <h3 class="work-title">苗风保温杯</h3>
-                    <p class="work-desc">融合苗族传统文化元素与现代保温器皿的产品设计</p>
+                    <h3 class="work-title">民族文创产品设计</h3>
+                    <p class="work-desc">融合传统民族文化元素与现代产品设计的文创作品</p>
                     <div class="work-tags">
                         <span class="work-tag">文创设计</span>
                         <span class="work-tag">民族文化</span>
@@ -1261,61 +1453,61 @@
                 </div>
                 <div class="work-arrow">→</div>
             </div>
-            <div class="work-card reveal reveal-delay-2" role="button" tabindex="0" onclick="openWorkDetail(2)" onkeydown="handleWorkCardKey(event, 2)">
+            <div class="work-card reveal reveal-delay-2" onclick="openWorkDetail(2)">
                 <div class="work-thumb work-thumb-3">
-                    <span class="work-emoji">♿</span>
+                    <img src="preview_work_3.jpg" alt="适老化轮椅升降机" class="work-thumb-img">
                 </div>
                 <div class="work-info">
                     <div class="work-category">适老化设计</div>
                     <h3 class="work-title">适老化轮椅升降机</h3>
-                    <p class="work-desc">关注老年群体出行痛点，设计安全便捷的轮椅升降装置</p>
+                    <p class="work-desc">基于老年用户真实需求，设计安全便捷的轮椅升降装置</p>
                     <div class="work-tags">
                         <span class="work-tag">适老化</span>
                         <span class="work-tag">无障碍</span>
-                        <span class="work-tag">机械设计</span>
+                        <span class="work-tag">工业设计</span>
                     </div>
                 </div>
                 <div class="work-arrow">→</div>
             </div>
-            <div class="work-card reveal" role="button" tabindex="0" onclick="openWorkDetail(3)" onkeydown="handleWorkCardKey(event, 3)">
+            <div class="work-card reveal" onclick="openWorkDetail(3)">
                 <div class="work-thumb work-thumb-4">
-                    <span class="work-emoji">🥽</span>
+                    <img src="preview_work_4.jpg" alt="农知旅人VR" class="work-thumb-img">
                 </div>
                 <div class="work-info">
                     <div class="work-category">VR体验设计</div>
-                    <h3 class="work-title">基于VR的农业技术体验设计</h3>
-                    <p class="work-desc">运用虚拟现实技术打造沉浸式农业技术学习体验</p>
+                    <h3 class="work-title">农知旅人——基于VR的农业技术体验设计</h3>
+                    <p class="work-desc">集农业知识学习、技能训练、乡村文旅体验于一体的沉浸式VR系统</p>
                     <div class="work-tags">
                         <span class="work-tag">VR/AR</span>
                         <span class="work-tag">体验设计</span>
-                        <span class="work-tag">农业科技</span>
+                        <span class="work-tag">乡村振兴</span>
                     </div>
                 </div>
                 <div class="work-arrow">→</div>
             </div>
-            <div class="work-card reveal reveal-delay-1" role="button" tabindex="0" onclick="openWorkDetail(4)" onkeydown="handleWorkCardKey(event, 4)">
+            <div class="work-card reveal reveal-delay-1" onclick="openWorkDetail(4)">
                 <div class="work-thumb work-thumb-5">
-                    <span class="work-emoji">🤖</span>
+                    <img src="preview_work_5.jpg" alt="农用无人机" class="work-thumb-img">
                 </div>
                 <div class="work-info">
                     <div class="work-category">智能装备设计</div>
-                    <h3 class="work-title">农用机器人多载荷模块化产品设计</h3>
-                    <p class="work-desc">面向智慧农业的多功能模块化农用机器人系统设计</p>
+                    <h3 class="work-title">农用无人机多载荷模块化产品设计</h3>
+                    <p class="work-desc">面向山地茶农痛点，一台主机搭配三大可替换载荷模块</p>
                     <div class="work-tags">
-                        <span class="work-tag">机器人</span>
+                        <span class="work-tag">无人机</span>
                         <span class="work-tag">模块化</span>
                         <span class="work-tag">智慧农业</span>
                     </div>
                 </div>
                 <div class="work-arrow">→</div>
             </div>
-            <div class="work-card reveal reveal-delay-2" role="button" tabindex="0" onclick="openWorkDetail(5)" onkeydown="handleWorkCardKey(event, 5)">
+            <div class="work-card reveal reveal-delay-2" onclick="openWorkDetail(5)">
                 <div class="work-thumb work-thumb-6">
-                    <span class="work-emoji">🚁</span>
+                    <img src="preview_work_6.jpg" alt="丛林灭火无人机" class="work-thumb-img">
                 </div>
                 <div class="work-info">
                     <div class="work-category">应急装备设计</div>
-                    <h3 class="work-title">丛林灭火无人机</h3>
+                    <h3 class="work-title">丛林灭火无人机概念设计</h3>
                     <p class="work-desc">面向森林火灾场景的智能无人机概念设计与系统方案</p>
                     <div class="work-tags">
                         <span class="work-tag">无人机</span>
@@ -1325,18 +1517,34 @@
                 </div>
                 <div class="work-arrow">→</div>
             </div>
-            <div class="work-card reveal" role="button" tabindex="0" onclick="openWorkDetail(6)" onkeydown="handleWorkCardKey(event, 6)">
+            <div class="work-card reveal" onclick="openWorkDetail(6)">
                 <div class="work-thumb work-thumb-7">
-                    <span class="work-emoji">🌲</span>
+                    <img src="preview_work_7.jpg" alt="森息低干预乡土疗愈" class="work-thumb-img">
                 </div>
                 <div class="work-info">
                     <div class="work-category">疗愈场景设计</div>
-                    <h3 class="work-title">塞罕坝环境疗愈设计</h3>
-                    <p class="work-desc">以塞罕坝精神为内核的环境疗愈空间与体验设计</p>
+                    <h3 class="work-title">森息·低干预乡土疗愈</h3>
+                    <p class="work-desc">以"低干预·隐于自然"为原则，构建乡村五感自愈场域</p>
                     <div class="work-tags">
                         <span class="work-tag">疗愈设计</span>
                         <span class="work-tag">环境设计</span>
                         <span class="work-tag">服务设计</span>
+                    </div>
+                </div>
+                <div class="work-arrow">→</div>
+            </div>
+            <div class="work-card reveal reveal-delay-1" onclick="openWorkDetail(7)">
+                <div class="work-thumb work-thumb-8">
+                    <img src="preview_work_8.jpg" alt="暮光共济智能眼镜" class="work-thumb-img">
+                </div>
+                <div class="work-info">
+                    <div class="work-category">智能医疗设备</div>
+                    <h3 class="work-title">暮光共济——毫米波生物雷达智能眼镜</h3>
+                    <p class="work-desc">非接触式健康监护智能眼镜，关爱空巢老人健康</p>
+                    <div class="work-tags">
+                        <span class="work-tag">智能穿戴</span>
+                        <span class="work-tag">健康监测</span>
+                        <span class="work-tag">适老化</span>
                     </div>
                 </div>
                 <div class="work-arrow">→</div>
@@ -1349,19 +1557,219 @@
         <div class="section-label reveal visible">AWARDS &amp; HONORS</div>
         <h2 class="section-title reveal visible">荣誉<span class="accent">奖项</span></h2>
         <div class="carousel-wrapper reveal visible">
-            <button class="carousel-btn prev" type="button" aria-label="上一项荣誉" onclick="carouselMove(-1)">‹</button>
+            <button class="carousel-btn prev" onclick="carouselMove(-1)">‹</button>
             <div class="carousel-viewport">
-                <div class="carousel-track" id="carouselTrack"></div>
+                <div class="carousel-track" id="carouselTrack"><div class="carousel-slide">
+                <img src="微信图片_20260903141318_250_1.jpg" alt="友发奖学金" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_250_1.jpg', '友发奖学金 — 2024-2025学年 · 天津仁爱学院')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>友发奖学金</h3>
+                        <p>2024-2025学年 · 天津仁爱学院</p>
+                    </div>
+                    <span class="carousel-badge gold">奖学金</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_251_1.jpg" alt="优秀班干部" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_251_1.jpg', '优秀班干部 — 2024-2025学年 · 天津仁爱学院')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>优秀班干部</h3>
+                        <p>2024-2025学年 · 天津仁爱学院</p>
+                    </div>
+                    <span class="carousel-badge ">校级</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_253_1.jpg" alt="优秀团干部" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_253_1.jpg', '优秀团干部 — 2025年5月 · 五四共青团表彰')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>优秀团干部</h3>
+                        <p>2025年5月 · 五四共青团表彰</p>
+                    </div>
+                    <span class="carousel-badge ">团组织</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_255_1.jpg" alt="国青杯艺术设计一等奖" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_255_1.jpg', '国青杯艺术设计一等奖 — 作品《多功能阅读台灯》· 智能产品设计')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>国青杯艺术设计一等奖</h3>
+                        <p>作品《多功能阅读台灯》· 智能产品设计</p>
+                    </div>
+                    <span class="carousel-badge gold">一等奖</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_256_1.jpg" alt="文化强国杯文学知识挑战赛一等奖" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_256_1.jpg', '文化强国杯文学知识挑战赛一等奖 — 2025年 · 全国高校文学知识挑战赛')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>文化强国杯文学知识挑战赛一等奖</h3>
+                        <p>2025年 · 全国高校文学知识挑战赛</p>
+                    </div>
+                    <span class="carousel-badge gold">一等奖</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_261_1.jpg" alt="人工智能+创新创业大赛一等奖" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_261_1.jpg', '人工智能+创新创业大赛一等奖 — 2025年 · 全国大学生创新创业大赛初赛')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>人工智能+创新创业大赛一等奖</h3>
+                        <p>2025年 · 全国大学生创新创业大赛初赛</p>
+                    </div>
+                    <span class="carousel-badge gold">一等奖</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_258_1.jpg" alt="杰出青年" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_258_1.jpg', '杰出青年 — 强国复兴有我 全国青年爱国宣传志愿行动')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>杰出青年</h3>
+                        <p>"强国复兴有我"全国青年爱国宣传志愿行动</p>
+                    </div>
+                    <span class="carousel-badge ">称号</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_254_1.jpg" alt="COP28全球青年零碳未来行动" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_254_1.jpg', 'COP28全球青年零碳未来行动 — 参与宣传工作 · 贡献青年力量')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>COP28全球青年零碳未来行动</h3>
+                        <p>参与宣传工作 · 贡献青年力量</p>
+                    </div>
+                    <span class="carousel-badge ">国际</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_260_1.jpg" alt="大熊猫守护计划" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_260_1.jpg', '大熊猫守护计划 — 全国高校公益项目 · 积极参与无私奉献')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>大熊猫守护计划</h3>
+                        <p>全国高校公益项目 · 积极参与无私奉献</p>
+                    </div>
+                    <span class="carousel-badge ">公益</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_252_1.jpg" alt="新媒体宣传组成员" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_252_1.jpg', '新媒体宣传组成员 — 智能交互专业 · 数智传媒与设计艺术学院')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>新媒体宣传组成员</h3>
+                        <p>智能交互专业 · 数智传媒与设计艺术学院</p>
+                    </div>
+                    <span class="carousel-badge ">聘书</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_257_1.jpg" alt="社会实践活动证书" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_257_1.jpg', '社会实践活动证书 — 文化强国杯 · 社会实践参与认证')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>社会实践活动证书</h3>
+                        <p>文化强国杯 · 社会实践参与认证</p>
+                    </div>
+                    <span class="carousel-badge ">实践</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_259_1.jpg" alt="荣誉证书" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_259_1.jpg', '荣誉证书 — 强国复兴有我 · 成绩优异表现突出')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>荣誉证书</h3>
+                        <p>"强国复兴有我" · 成绩优异表现突出</p>
+                    </div>
+                    <span class="carousel-badge ">荣誉</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_250_1.jpg" alt="友发奖学金" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_250_1.jpg', '友发奖学金 — 2024-2025学年 · 天津仁爱学院')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>友发奖学金</h3>
+                        <p>2024-2025学年 · 天津仁爱学院</p>
+                    </div>
+                    <span class="carousel-badge gold">奖学金</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_251_1.jpg" alt="优秀班干部" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_251_1.jpg', '优秀班干部 — 2024-2025学年 · 天津仁爱学院')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>优秀班干部</h3>
+                        <p>2024-2025学年 · 天津仁爱学院</p>
+                    </div>
+                    <span class="carousel-badge ">校级</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_253_1.jpg" alt="优秀团干部" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_253_1.jpg', '优秀团干部 — 2025年5月 · 五四共青团表彰')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>优秀团干部</h3>
+                        <p>2025年5月 · 五四共青团表彰</p>
+                    </div>
+                    <span class="carousel-badge ">团组织</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_255_1.jpg" alt="国青杯艺术设计一等奖" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_255_1.jpg', '国青杯艺术设计一等奖 — 作品《多功能阅读台灯》· 智能产品设计')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>国青杯艺术设计一等奖</h3>
+                        <p>作品《多功能阅读台灯》· 智能产品设计</p>
+                    </div>
+                    <span class="carousel-badge gold">一等奖</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_256_1.jpg" alt="文化强国杯文学知识挑战赛一等奖" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_256_1.jpg', '文化强国杯文学知识挑战赛一等奖 — 2025年 · 全国高校文学知识挑战赛')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>文化强国杯文学知识挑战赛一等奖</h3>
+                        <p>2025年 · 全国高校文学知识挑战赛</p>
+                    </div>
+                    <span class="carousel-badge gold">一等奖</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_261_1.jpg" alt="人工智能+创新创业大赛一等奖" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_261_1.jpg', '人工智能+创新创业大赛一等奖 — 2025年 · 全国大学生创新创业大赛初赛')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>人工智能+创新创业大赛一等奖</h3>
+                        <p>2025年 · 全国大学生创新创业大赛初赛</p>
+                    </div>
+                    <span class="carousel-badge gold">一等奖</span>
+                </div></div><div class="carousel-slide">
+                <img src="好创意证书.jpg" alt="好创意大赛二等奖" class="carousel-img" onclick="openLightbox('好创意证书.jpg', '好创意大赛二等奖 — 基于心流理论的沉浸式乐器陪练系统设计 · AI情感陪伴装置类 · 第20届天津赛区')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>好创意大赛二等奖</h3>
+                        <p>基于心流理论的沉浸式乐器陪练系统设计 · AI情感陪伴装置类 · 第20届天津赛区</p>
+                    </div>
+                    <span class="carousel-badge ">二等奖</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_258_1.jpg" alt="杰出青年" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_258_1.jpg', '杰出青年 — 强国复兴有我 全国青年爱国宣传志愿行动')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>杰出青年</h3>
+                        <p>"强国复兴有我"全国青年爱国宣传志愿行动</p>
+                    </div>
+                    <span class="carousel-badge ">称号</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_254_1.jpg" alt="COP28全球青年零碳未来行动" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_254_1.jpg', 'COP28全球青年零碳未来行动 — 参与宣传工作 · 贡献青年力量')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>COP28全球青年零碳未来行动</h3>
+                        <p>参与宣传工作 · 贡献青年力量</p>
+                    </div>
+                    <span class="carousel-badge ">国际</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_260_1.jpg" alt="大熊猫守护计划" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_260_1.jpg', '大熊猫守护计划 — 全国高校公益项目 · 积极参与无私奉献')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>大熊猫守护计划</h3>
+                        <p>全国高校公益项目 · 积极参与无私奉献</p>
+                    </div>
+                    <span class="carousel-badge ">公益</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_252_1.jpg" alt="新媒体宣传组成员" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_252_1.jpg', '新媒体宣传组成员 — 智能交互专业 · 数智传媒与设计艺术学院')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>新媒体宣传组成员</h3>
+                        <p>智能交互专业 · 数智传媒与设计艺术学院</p>
+                    </div>
+                    <span class="carousel-badge ">聘书</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_257_1.jpg" alt="社会实践活动证书" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_257_1.jpg', '社会实践活动证书 — 文化强国杯 · 社会实践参与认证')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>社会实践活动证书</h3>
+                        <p>文化强国杯 · 社会实践参与认证</p>
+                    </div>
+                    <span class="carousel-badge ">实践</span>
+                </div></div><div class="carousel-slide">
+                <img src="微信图片_20260903141318_259_1.jpg" alt="荣誉证书" class="carousel-img" onclick="openLightbox('微信图片_20260903141318_259_1.jpg', '荣誉证书 — 强国复兴有我 · 成绩优异表现突出')">
+                <div class="carousel-info">
+                    <div class="carousel-text">
+                        <h3>荣誉证书</h3>
+                        <p>"强国复兴有我" · 成绩优异表现突出</p>
+                    </div>
+                    <span class="carousel-badge ">荣誉</span>
+                </div></div></div>
             </div>
-            <button class="carousel-btn next" type="button" aria-label="下一项荣誉" onclick="carouselMove(1)">›</button>
-            <div class="carousel-dots" id="carouselDots"></div>
+            <button class="carousel-btn next" onclick="carouselMove(1)">›</button>
+            <div class="carousel-dots" id="carouselDots"><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot active"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div><div class="carousel-dot"></div></div>
         </div>
     </section>
 
     <!-- Work Detail Overlay -->
-    <div class="work-detail-overlay" id="workDetailOverlay" role="dialog" aria-modal="true" aria-labelledby="workDetailTitle" aria-hidden="true">
+    <div class="work-detail-overlay" id="workDetailOverlay">
         <div class="work-detail-container" id="workDetailContainer">
-            <button class="work-detail-close" type="button" aria-label="关闭作品详情" onclick="closeWorkDetail()">×</button>
+            <button class="work-detail-close" onclick="closeWorkDetail()">×</button>
             <div class="work-detail-hero" id="workDetailHero">
                 <span class="work-detail-hero-emoji" id="workDetailHeroEmoji">💡</span>
             </div>
@@ -1371,22 +1779,19 @@
                 <div class="work-detail-tags" id="workDetailTags"></div>
                 <div class="work-detail-section">
                     <div class="work-detail-section-title">项目简介</div>
-                    <div class="work-detail-placeholder">
-                        内容待补充<br>
-                        <span style="font-size:0.75rem;opacity:0.6;">后续将完善作品详细介绍、设计理念、设计过程等内容</span>
-                    </div>
+                    <div class="work-detail-section-text" id="workDetailIntro"></div>
+                </div>
+                <div class="work-detail-section" id="workDetailGallerySection" style="display:none;">
+                    <div class="work-detail-section-title">作品图集</div>
+                    <div class="work-detail-gallery" id="workDetailGallery"></div>
                 </div>
                 <div class="work-detail-section">
                     <div class="work-detail-section-title">设计亮点</div>
-                    <div class="work-detail-placeholder">
-                        内容待补充
-                    </div>
+                    <ul class="work-detail-highlight-list" id="workDetailHighlights"></ul>
                 </div>
                 <div class="work-detail-section">
                     <div class="work-detail-section-title">设计过程</div>
-                    <div class="work-detail-placeholder">
-                        内容待补充
-                    </div>
+                    <ul class="work-detail-process-list" id="workDetailProcess"></ul>
                 </div>
             </div>
             <div class="work-detail-nav">
@@ -1398,7 +1803,7 @@
 
     <!-- Lightbox -->
     <div class="lightbox" id="lightbox">
-        <button class="lightbox-close" id="lightboxClose" type="button" aria-label="关闭图片预览">×</button>
+        <button class="lightbox-close" id="lightboxClose">×</button>
         <img class="lightbox-content" id="lightboxImg" src="" alt="">
         <div class="lightbox-caption" id="lightboxCaption"></div>
     </div>
@@ -1521,44 +1926,16 @@
         // Mobile Nav Toggle
         const navToggle = document.getElementById('navToggle');
         const navLinks = document.getElementById('navLinks');
-        const mobileNavQuery = window.matchMedia('(max-width: 768px)');
-
-        function setNavOpen(isOpen, restoreFocus = false) {
-            navLinks.classList.toggle('open', isOpen);
-            navToggle.classList.toggle('active', isOpen);
-            navToggle.setAttribute('aria-expanded', String(isOpen));
-            navToggle.setAttribute('aria-label', isOpen ? '关闭导航菜单' : '打开导航菜单');
-            navLinks.inert = !isOpen;
-            if (isOpen) {
-                navLinks.querySelector('a').focus();
-            } else if (restoreFocus) {
-                navToggle.focus();
-            }
-        }
-
-        function syncNavMode() {
-            if (mobileNavQuery.matches) {
-                setNavOpen(navLinks.classList.contains('open'));
-            } else {
-                navLinks.classList.remove('open');
-                navLinks.inert = false;
-                navToggle.classList.remove('active');
-                navToggle.setAttribute('aria-expanded', 'false');
-                navToggle.setAttribute('aria-label', '打开导航菜单');
-            }
-        }
-
         navToggle.addEventListener('click', () => {
-            const isOpen = navLinks.classList.toggle('open');
-            setNavOpen(isOpen);
+            navToggle.classList.toggle('active');
+            navLinks.classList.toggle('open');
         });
         navLinks.querySelectorAll('a').forEach(a => {
             a.addEventListener('click', () => {
-                if (mobileNavQuery.matches) setNavOpen(false);
+                navToggle.classList.remove('active');
+                navLinks.classList.remove('open');
             });
         });
-        mobileNavQuery.addEventListener('change', syncNavMode);
-        syncNavMode();
 
         // Scroll Progress & Navbar
         const scrollProgress = document.getElementById('scrollProgress');
@@ -1566,8 +1943,7 @@
         window.addEventListener('scroll', () => {
             const scrollTop = window.scrollY;
             const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-            scrollProgress.style.width = Math.min(100, Math.max(0, progress)) + '%';
+            scrollProgress.style.width = (scrollTop / docHeight) * 100 + '%';
             if (scrollTop > 60) {
                 navbar.classList.add('scrolled');
                 navToggle.classList.remove('dark');
@@ -1674,7 +2050,7 @@
         });
 
         // ========== 3D Tilt on Project Cards ==========
-        document.querySelectorAll('.work-card').forEach(card => {
+        document.querySelectorAll('.project-card').forEach(card => {
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
                 const x = e.clientX - rect.left;
@@ -1715,20 +2091,20 @@
 
         // ========== Awards Carousel ==========
         const awards = [
-            { img: 'award-youfa-scholarship.jpg', title: '友发奖学金', desc: '2024-2025学年 · 天津仁爱学院', badge: '奖学金', gold: true },
-            { img: 'award-excellent-class-cadre.jpg', title: '优秀班干部', desc: '2024-2025学年 · 天津仁爱学院', badge: '校级', gold: false },
-            { img: 'award-excellent-league-cadre.jpg', title: '优秀团干部', desc: '2024-2025学年 · 五四共青团表彰', badge: '团组织', gold: false },
-            { img: 'award-guoqing-cup.jpg', title: '国青杯艺术设计一等奖', desc: '作品《多功能阅读台灯》· 智能产品设计', badge: '一等奖', gold: true },
-            { img: 'award-culture-cup.jpg', title: '文化强国杯文学知识挑战赛一等奖', desc: '2025年 · 全国高校文学知识挑战赛', badge: '一等奖', gold: true },
-            { img: 'award-ai-innovation.jpg', title: '人工智能+创新创业大赛一等奖', desc: '2025年 · 全国大学生创新创业大赛初赛', badge: '一等奖', gold: true },
-            { img: 'award-good-design.jpg', title: '好创意大赛二等奖', desc: '基于心流理论的沉浸式乐器陪练系统设计 · AI情感陪伴装置类 · 第20届天津赛区', badge: '二等奖', gold: false },
-            { title: '华灿杯设计竞赛', desc: '2025年7月 · 证书图片待补充', badge: '待补充', gold: false, placeholder: true },
-            { img: 'award-outstanding-youth.jpg', title: '杰出青年', desc: '“强国复兴有我”全国青年爱国宣传志愿行动', badge: '称号', gold: false },
-            { img: 'award-cop28.jpg', title: 'COP28全球青年零碳未来行动', desc: '参与宣传工作 · 贡献青年力量', badge: '国际', gold: false },
-            { img: 'award-panda-protection.jpg', title: '大熊猫守护计划', desc: '全国高校公益项目 · 积极参与无私奉献', badge: '公益', gold: false },
-            { img: 'appointment-new-media.jpg', title: '新媒体宣传组成员', desc: '智能交互专业 · 数智传媒与设计艺术学院', badge: '聘书', gold: false },
-            { img: 'award-social-practice.jpg', title: '社会实践活动证书', desc: '文化强国杯 · 社会实践参与认证', badge: '实践', gold: false },
-            { img: 'award-patriotic-youth.jpg', title: '荣誉证书', desc: '“强国复兴有我” · 成绩优异表现突出', badge: '荣誉', gold: false },
+            { img: '微信图片_20260903141318_250_1.jpg', title: '友发奖学金', desc: '2024-2025学年 · 天津仁爱学院', badge: '奖学金', gold: true },
+            { img: '微信图片_20260903141318_251_1.jpg', title: '优秀班干部', desc: '2024-2025学年 · 天津仁爱学院', badge: '校级', gold: false },
+            { img: '微信图片_20260903141318_253_1.jpg', title: '优秀团干部', desc: '2025年5月 · 五四共青团表彰', badge: '团组织', gold: false },
+            { img: '微信图片_20260903141318_255_1.jpg', title: '国青杯艺术设计一等奖', desc: '作品《多功能阅读台灯》· 智能产品设计', badge: '一等奖', gold: true },
+            { img: '微信图片_20260903141318_256_1.jpg', title: '文化强国杯文学知识挑战赛一等奖', desc: '2025年 · 全国高校文学知识挑战赛', badge: '一等奖', gold: true },
+            { img: '微信图片_20260903141318_261_1.jpg', title: '人工智能+创新创业大赛一等奖', desc: '2025年 · 全国大学生创新创业大赛初赛', badge: '一等奖', gold: true },
+            { img: '好创意证书.jpg', title: '好创意大赛二等奖', desc: '基于心流理论的沉浸式乐器陪练系统设计 · AI情感陪伴装置类 · 第20届天津赛区', badge: '二等奖', gold: false },
+            { img: '微信图片_20260903141318_255_1.jpg', title: '华灿杯设计竞赛', desc: '2025年7月 · 持续在设计赛道探索突破', badge: '竞赛', gold: false },
+            { img: '微信图片_20260903141318_258_1.jpg', title: '杰出青年', desc: '"强国复兴有我"全国青年爱国宣传志愿行动', badge: '称号', gold: false },
+            { img: '微信图片_20260903141318_254_1.jpg', title: 'COP28全球青年零碳未来行动', desc: '参与宣传工作 · 贡献青年力量', badge: '国际', gold: false },
+            { img: '微信图片_20260903141318_260_1.jpg', title: '大熊猫守护计划', desc: '全国高校公益项目 · 积极参与无私奉献', badge: '公益', gold: false },
+            { img: '微信图片_20260903141318_252_1.jpg', title: '新媒体宣传组成员', desc: '智能交互专业 · 数智传媒与设计艺术学院', badge: '聘书', gold: false },
+            { img: '微信图片_20260903141318_257_1.jpg', title: '社会实践活动证书', desc: '文化强国杯 · 社会实践参与认证', badge: '实践', gold: false },
+            { img: '微信图片_20260903141318_259_1.jpg', title: '荣誉证书', desc: '"强国复兴有我" · 成绩优异表现突出', badge: '荣誉', gold: false },
         ];
 
         const track = document.getElementById('carouselTrack');
@@ -1744,11 +2120,8 @@
         awards.forEach((award, i) => {
             const slide = document.createElement('div');
             slide.className = 'carousel-slide';
-            const media = award.placeholder
-                ? `<div class="carousel-img carousel-placeholder" role="img" aria-label="${award.title}证书图片待补充"><span>资料待补充</span></div>`
-                : `<img src="${award.img}" alt="${award.title}" class="carousel-img" loading="lazy">`;
             slide.innerHTML = `
-                ${media}
+                <img src="${award.img}" alt="${award.title}" class="carousel-img" onclick="openLightbox('${award.img}', '${award.title} — ${award.desc}')">
                 <div class="carousel-info">
                     <div class="carousel-text">
                         <h3>${award.title}</h3>
@@ -1757,12 +2130,6 @@
                     <span class="carousel-badge ${award.gold ? 'gold' : ''}">${award.badge}</span>
                 </div>`;
             track.appendChild(slide);
-
-            if (!award.placeholder) {
-                slide.querySelector('img').addEventListener('click', () => {
-                    openLightbox(award.img, `${award.title} — ${award.desc}`);
-                });
-            }
 
             const dot = document.createElement('div');
             dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
@@ -1829,23 +2196,14 @@
         lightboxClose.addEventListener('click', closeLightbox);
         lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && navLinks.classList.contains('open')) {
-                setNavOpen(false, true);
-                return;
-            }
-            const workOverlay = document.getElementById('workDetailOverlay');
-            if (e.key === 'Tab' && workOverlay.classList.contains('active')) {
-                trapDialogFocus(e, workOverlay);
-                return;
-            }
             if (e.key === 'Escape') {
-                if (workOverlay.classList.contains('active')) {
+                if (document.getElementById('workDetailOverlay').classList.contains('active')) {
                     closeWorkDetail();
                 } else {
                     closeLightbox();
                 }
             }
-            if (workOverlay.classList.contains('active')) {
+            if (document.getElementById('workDetailOverlay').classList.contains('active')) {
                 if (e.key === 'ArrowLeft') navWork(-1);
                 if (e.key === 'ArrowRight') navWork(1);
             } else {
@@ -1859,100 +2217,217 @@
             {
                 emoji: '💡',
                 category: '智能产品设计',
-                title: '多功能阅读台灯',
+                title: '多功能智能阅读台灯',
                 tags: ['产品设计', '智能交互', '国青杯一等奖'],
-                heroClass: 'work-thumb-1'
+                heroClass: 'work-thumb-1',
+                heroImage: 'preview_work_1.jpg',
+                intro: '本产品以"高效、舒适、便捷"为核心设计理念，针对阅读与电子设备使用场景中双手占用、光线不佳等痛点，将台灯与阅读架创新融合，旨在为用户提供解放双手、角度可调的沉浸式阅读体验，同时兼顾临时收纳功能，满足用户多样化使用需求。作品获国青杯艺术设计作品展评一等奖。',
+                highlights: [
+                    '功能融合创新：突破传统台灯与阅读架独立使用模式，将照明与支撑功能合二为一，实现"一机多用"',
+                    '可调节结构技术：多轴联动关节与阻尼转轴设计，支持多角度自由调节，适配不同坐姿的阅读习惯',
+                    '智能照明系统：搭载LED护眼光源，通过按钮实现不同需求对光的调节，有效减少视觉疲劳',
+                    '稳固支撑技术：底座采用加重金属材质与防滑硅胶垫，结合三角力学结构设计确保稳固',
+                    '场景拓展创新：阅读架平放时秒变临时收纳台，满足办公、学习、生活多场景使用需求',
+                    '共生理念：人与产品、产品与空间、功能与环保的共生，采用节能LED光源与耐用材料'
+                ],
+                process: [
+                    '针对阅读场景痛点进行用户调研与需求分析',
+                    '提出台灯与阅读架功能融合的设计方案',
+                    '可调节结构设计与多轴联动关节技术验证',
+                    'LED护眼照明系统集成与光效优化',
+                    '底座稳固性与防滑设计测试',
+                    '成果参展国青杯艺术设计作品展评，获一等奖'
+                ],
+                gallery: ['work_lamp.jpg']
             },
             {
                 emoji: '🍵',
                 category: '文化创意设计',
-                title: '苗风保温杯',
+                title: '民族文创产品设计',
                 tags: ['文创设计', '民族文化', '产品设计'],
-                heroClass: 'work-thumb-2'
+                heroClass: 'work-thumb-2',
+                heroImage: 'preview_work_2.jpg',
+                intro: '融合传统民族文化元素与现代产品设计的文创作品，通过现代设计手法重新诠释民族艺术之美，使传统文化在日常使用中焕发新生。作品参加民族文创大赛，探索民族文化与现代产品的深度融合路径。',
+                highlights: [
+                    '民族元素提取：从传统民族文化中提取核心视觉元素与符号',
+                    '现代工艺融合：将民族图案与色彩系统融入现代产品形态',
+                    '实用性与艺术性兼顾：确保产品功能性的同时提升文化审美价值',
+                    '文化传承创新：以产品设计为载体传播民族文化，增强文化认同'
+                ],
+                process: [
+                    '民族文化元素调研与素材收集',
+                    '核心视觉符号提取与设计转化',
+                    '产品形态设计与文化元素融合',
+                    '三维建模与渲染表现',
+                    '参加民族文创大赛'
+                ],
+                gallery: ['work_cultural.jpg', 'work_cultural3.jpg', 'work_cultural4.jpg', 'work_cultural5.png']
             },
             {
                 emoji: '♿',
                 category: '适老化设计',
-                title: '适老化轮椅升降机',
-                tags: ['适老化', '无障碍', '机械设计'],
-                heroClass: 'work-thumb-3'
+                title: '基于老年用户需求的轮椅升降机设计',
+                tags: ['适老化', '无障碍', '工业设计', '天津市工业设计大赛'],
+                heroClass: 'work-thumb-3',
+                heroImage: 'preview_work_3.jpg',
+                intro: '针对老年群体出行痛点，设计安全便捷的轮椅升降装置。项目参加2026年第十九届天津市大学生工业与艺术设计竞赛，以老年用户真实需求为出发点，通过人因工程学分析优化升降机构，提升老年群体出行品质与安全性。团队成员：贾梦晴、冯柯杰、陈俞菲、郝康含；指导教师：张寞轩、苏俊旭。',
+                highlights: [
+                    '老年用户需求导向：基于老年群体出行场景痛点分析，从真实需求出发进行设计',
+                    '安全便捷设计：优化升降机构，确保老年用户使用过程中的安全性与便捷性',
+                    '人因工程学应用：针对老年用户操作习惯与体能特征进行人因分析与设计优化',
+                    '无障碍出行提升：提升老年群体出行品质，助力无障碍环境建设'
+                ],
+                process: [
+                    '老年用户出行需求调研与痛点分析',
+                    '升降机构方案设计与结构优化',
+                    '人因工程学分析与适老化设计调整',
+                    'Rhino三维建模与KeyShot渲染表现',
+                    '参加天津市大学生工业与艺术设计竞赛'
+                ],
+                gallery: ['work_wheelchair.jpg', 'work_wheelchair2.jpg']
             },
             {
                 emoji: '🥽',
                 category: 'VR体验设计',
-                title: '基于VR的农业技术体验设计',
-                tags: ['VR/AR', '体验设计', '农业科技'],
-                heroClass: 'work-thumb-4'
+                title: '农知旅人——基于VR的农业技术体验设计',
+                tags: ['VR/AR', '体验设计', '乡村振兴', '中国国际大学生创新大赛'],
+                heroClass: 'work-thumb-4',
+                heroImage: 'preview_work_4.jpg',
+                intro: '农知旅人是一个集农业知识学习、技能训练、乡村文旅体验于一体的沉浸式VR农业服务系统。项目源于河北省承德市周台子村的实地调研，旨在用VR技术填补传统农业教育方式的不足，降低培训成本约90%，提升学习效率约40%。项目参加中国国际大学生创新大赛（2026），团队使命为"以VR技术为核心，构建沉浸式农技体验服务系统，赋能乡村振兴与智慧农业发展"。',
+                highlights: [
+                    'VR沉浸技术：基于VR头显和手柄交互，构建沉浸式农业场景，让用户"走进"农田、果园和展馆',
+                    '分层服务设计：针对农户、学生、游客三类用户设计差异化体验内容，实现"千人千面"的精准服务',
+                    '任务驱动机制：将自由漫游转化为有目标的结构化学习，通过任务闯关提升参与感和学习效果',
+                    'AI智能辅助：集成AI问答模型和动作识别评分引擎，提供智能辅导和即时反馈',
+                    '完整服务闭环：构建从触达预约到分享复访的完整服务链条，形成持续运营机制',
+                    '设计目标：科技赋能农业·知识连接土地·体验创造价值'
+                ],
+                process: [
+                    '河北省承德市周台子村田野调查（发放问卷160份，回收有效问卷148份，有效率92.5%）',
+                    '文献调研与VR技术可行性分析，明确项目差异化定位',
+                    '分层服务系统设计：农户培训、学生教育、游客体验三大场景',
+                    'VR场景构建与交互设计，集成AI智能辅助',
+                    '参加中国国际大学生创新大赛（2026）'
+                ],
+                gallery: ['work_vr_agri.png', 'work_vr_agri2.png']
             },
             {
                 emoji: '🤖',
                 category: '智能装备设计',
-                title: '农用机器人多载荷模块化产品设计',
-                tags: ['机器人', '模块化', '智慧农业'],
-                heroClass: 'work-thumb-5'
+                title: '基于服务设计思维的农用无人机多载荷模块化产品设计',
+                tags: ['无人机', '模块化', '智慧农业', '中国国际大学生创新大赛'],
+                heroClass: 'work-thumb-5',
+                heroImage: 'preview_work_5.jpg',
+                intro: '面向山地茶农农事生产多重困境，设计通用模块化无人机主机搭配三大可替换载荷模块（测绘、植保、吊运），覆盖茶园监测、打药、物料运输全流程。项目参加中国国际大学生创新大赛高教主赛道创意组，在云南普洱茶园开展实地田野调研，旨在降低中小农户设备采购门槛，设备利用率从不足30%提升至全覆盖。',
+                highlights: [
+                    '通用模块化设计：一台主机搭配测绘机、植保机、吊运设备三大可替换载荷模块，降低采购门槛',
+                    '山地飞控算法：针对云南10°-30°梯田、陡坡林间茶园优化飞行控制逻辑',
+                    '通用快拆接口：快速更换载荷模块，适配不同农事时序需求',
+                    '智慧茶园SaaS系统：数字化管控茶园数据，提供种植指导与病虫害预警',
+                    '全链路农事服务：从设备到种植指导、本地维修的完整配套服务体系',
+                    '四大差异化价值：降低设备门槛、适配山地地形、数字化管控、全链路服务'
+                ],
+                process: [
+                    '云南普洱茶园实地田野调研与用户深度访谈',
+                    '全国植保无人机行业市场规模分析与云南普洱茶产业细分市场调研',
+                    '软硬件方案迭代设计与通用模块化无人机主机设计',
+                    '山地飞控算法与通用快拆接口技术攻关',
+                    '智慧茶园数字化SaaS系统开发',
+                    '参加中国国际大学生创新大赛高教主赛道创意组'
+                ],
+                gallery: ['work_drone_fire.jpg', 'work_drone_fire_2.jpg', 'work_drone_fire_3.jpg', 'work_drone_fire_4.jpg']
             },
             {
                 emoji: '🚁',
                 category: '应急装备设计',
-                title: '丛林灭火无人机',
+                title: '丛林灭火无人机概念设计',
                 tags: ['无人机', '应急救援', '概念设计'],
-                heroClass: 'work-thumb-6'
+                heroClass: 'work-thumb-6',
+                heroImage: 'preview_work_6.jpg',
+                intro: '面向森林火灾场景的智能无人机概念设计，通过三维建模与渲染展现无人机在复杂森林环境中的灭火作业方案。设计注重功能性与造型表现的结合，探索无人机在应急救援领域的应用可能。',
+                highlights: [
+                    '森林火灾场景适配：针对森林火灾复杂环境进行专用设计',
+                    '智能灭火系统：集成灭火剂投放与精准喷洒功能',
+                    '复杂地形飞行能力：适配森林复杂地形与气流环境',
+                    '三维建模与渲染表现：使用Rhino建模与KeyShot渲染，呈现高质量产品视觉效果'
+                ],
+                process: [
+                    '森林火灾场景需求分析与功能定义',
+                    '无人机造型概念设计与方案迭代',
+                    'Rhino三维建模与结构细节设计',
+                    'KeyShot渲染表现与材质设定',
+                    '多角度渲染输出与方案展示'
+                ],
+                gallery: ['preview_work_6.jpg', 'work_fire_drone_board.jpg']
             },
             {
                 emoji: '🌲',
                 category: '疗愈场景设计',
-                title: '塞罕坝环境疗愈设计',
-                tags: ['疗愈设计', '环境设计', '服务设计'],
-                heroClass: 'work-thumb-7'
+                title: '森息·低干预乡土疗愈——乡村五感自愈场域设计',
+                tags: ['疗愈设计', '环境设计', '服务设计', '中国国际大学生创新大赛'],
+                heroClass: 'work-thumb-7',
+                heroImage: 'preview_work_7.jpg',
+                intro: '针对都市群体感官钝化与情绪困境，以"低干预·隐于自然"为设计原则，在乡村自然环境中构建五感自愈场域。项目参加中国国际大学生创新大赛高教主赛道创意组，以御道口草原森林风景区为选址，设计四大疗愈装置：听觉（雨之声自然白噪音穹顶）、触觉（野触径土地连接步道）、视觉（森野寻踪微观放大镜）、休憩（青丘躺重力释放洞穴），帮助都市群体重建与自然的感官连接。',
+                highlights: [
+                    '五感疗愈体系：听觉、触觉、视觉、休憩四大装置覆盖多感官疗愈需求',
+                    '低干预设计原则：隐于自然，最小化对生态敏感区的环境干扰',
+                    '情绪路径设计：从入口到出口的情绪引导，构建完整的疗愈体验旅程',
+                    '心理健康普惠：降低传统疗愈的价格门槛、心理门槛、时间门槛与空间门槛',
+                    '乡村振兴赋能：带动文旅产业升级与村民增收，践行两山理论',
+                    '应对"自然缺失症"：帮助都市群体重建与自然的感官连接'
+                ],
+                process: [
+                    '御道口草原森林风景区实地调研（2025年接待游客89.1万人次）',
+                    '都市群体心理健康需求分析（《中国国民心理健康发展报告2023-2024》数据支撑）',
+                    '"自然缺失症"现象研究与五感疗愈装置设计',
+                    '低干预建造技术与极寒气候材料技术攻关',
+                    '用户体验旅程与情绪路径设计',
+                    '参加中国国际大学生创新大赛高教主赛道创意组'
+                ],
+                gallery: []
+            },
+            {
+                emoji: '👁️',
+                category: '智能医疗设备',
+                title: '暮光共济——毫米波生物雷达智能眼镜',
+                tags: ['智能穿戴', '健康监测', '适老化'],
+                heroClass: 'work-thumb-8',
+                heroImage: 'preview_work_8.jpg',
+                intro: '以"科技守护空巢老人健康"为使命，开发毫米波生物雷达智能眼镜，实现非接触式24小时健康监护。通过眼镜框架内置雷达模块实时监测心率、血压、呼吸频率，异常数据自动预警并联动家属、社区及医疗机构形成紧急救援闭环。产品填补"无感监测+紧急救援"场景空白，目标用户为全国1.4亿空巢老人。',
+                highlights: [
+                    '非接触式监测：毫米波雷达感知人体微动作（呼吸、心跳），无需佩戴电极或传感器，对皮肤无刺激',
+                    '高精度数据：心率误差≤±2次/分钟，血压误差≤±5mmHg，接近医疗级设备标准',
+                    '隐私保护性强：仅采集生理信号，不涉及图像或视频数据，避免传统监控设备的隐私争议',
+                    '紧急救援闭环：异常数据经人工复核后3分钟内启动紧急联络机制，联动家属、社区及120急救',
+                    '云端健康管理：存储180天历史健康数据，生成趋势分析报告，对接120急救调度系统与在线问诊',
+                    '差异化优势：非接触、高便携、隐私保护强，填补"无感监测+紧急救援"场景空白'
+                ],
+                process: [
+                    '空巢老人健康风险调研（60岁以上人口达2.8亿，空巢老人占比超50%）',
+                    '毫米波生物雷达技术可行性分析与非接触式监测方案设计',
+                    '智能眼镜硬件设计：微型雷达模块集成至眼镜横梁（厚度＜2mm），超轻钛合金框架（≤35g）',
+                    '健康管理系统开发：机器学习模型（10万+临床样本训练）与家属端微信小程序',
+                    '商业模式规划：产品销售（2999元/副）+服务订阅（39元/月）+政企合作',
+                    '落地实施计划：研发期（12个月）→试点期（6个月）→推广期（18个月）'
+                ],
+                gallery: ['work_glasses.jpg']
             }
         ];
 
         let currentWorkIndex = 0;
-        let lastWorkTrigger = null;
-
-        function trapDialogFocus(event, dialog) {
-            const focusable = [...dialog.querySelectorAll('button, [href], [tabindex]:not([tabindex="-1"])')]
-                .filter(element => !element.disabled && element.getClientRects().length > 0);
-            if (!focusable.length) return;
-            const first = focusable[0];
-            const last = focusable[focusable.length - 1];
-            if (event.shiftKey && document.activeElement === first) {
-                event.preventDefault();
-                last.focus();
-            } else if (!event.shiftKey && document.activeElement === last) {
-                event.preventDefault();
-                first.focus();
-            }
-        }
 
         function openWorkDetail(index) {
-            const activeElement = document.activeElement;
-            lastWorkTrigger = activeElement?.classList.contains('work-card')
-                ? activeElement
-                : document.querySelectorAll('.work-card')[index];
             currentWorkIndex = index;
             updateWorkDetail();
             const overlay = document.getElementById('workDetailOverlay');
             overlay.classList.add('active');
-            overlay.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
             document.getElementById('workDetailContainer').scrollTop = 0;
-            overlay.querySelector('.work-detail-close').focus();
-        }
-
-        function handleWorkCardKey(event, index) {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                openWorkDetail(index);
-            }
         }
 
         function closeWorkDetail() {
-            const overlay = document.getElementById('workDetailOverlay');
-            overlay.classList.remove('active');
-            overlay.setAttribute('aria-hidden', 'true');
+            document.getElementById('workDetailOverlay').classList.remove('active');
             document.body.style.overflow = '';
-            if (lastWorkTrigger?.isConnected) lastWorkTrigger.focus();
         }
 
         function navWork(dir) {
@@ -1965,25 +2440,63 @@
 
         function updateWorkDetail() {
             const work = works[currentWorkIndex];
-            document.getElementById('workDetailHeroEmoji').textContent = work.emoji;
+            const hero = document.getElementById('workDetailHero');
+            const heroEmoji = document.getElementById('workDetailHeroEmoji');
+
+            // Remove previous image/overlay elements
+            hero.querySelectorAll('.work-detail-hero-img, .work-detail-hero-overlay').forEach(el => el.remove());
+
+            if (work.heroImage) {
+                const img = document.createElement('img');
+                img.src = work.heroImage;
+                img.alt = work.title;
+                img.className = 'work-detail-hero-img';
+                hero.insertBefore(img, heroEmoji);
+                const overlay = document.createElement('div');
+                overlay.className = 'work-detail-hero-overlay';
+                hero.insertBefore(overlay, heroEmoji);
+                heroEmoji.style.display = 'none';
+                hero.style.background = '';
+            } else {
+                heroEmoji.style.display = '';
+                heroEmoji.textContent = work.emoji;
+                const gradients = [
+                    'linear-gradient(135deg, #fef3e2, #fce8c8)',
+                    'linear-gradient(135deg, #f0e6d3, #e8d5b7)',
+                    'linear-gradient(135deg, #e8f0e8, #d4e4d4)',
+                    'linear-gradient(135deg, #e6e0f0, #d0c4e0)',
+                    'linear-gradient(135deg, #e0ebe0, #c8dcc8)',
+                    'linear-gradient(135deg, #f0e0e0, #e0c8c8)',
+                    'linear-gradient(135deg, #e0ebe8, #c8dcd4)',
+                    'linear-gradient(135deg, #ede0f0, #d0c0e0)'
+                ];
+                hero.style.background = gradients[currentWorkIndex] || gradients[0];
+            }
+
             document.getElementById('workDetailCategory').textContent = work.category;
             document.getElementById('workDetailTitle').textContent = work.title;
-            const hero = document.getElementById('workDetailHero');
-            hero.className = 'work-detail-hero ' + work.heroClass.replace('work-thumb', 'work-thumb');
-            // Apply gradient background
-            const gradients = [
-                'linear-gradient(135deg, #fef3e2, #fce8c8)',
-                'linear-gradient(135deg, #f0e6d3, #e8d5b7)',
-                'linear-gradient(135deg, #e8f0e8, #d4e4d4)',
-                'linear-gradient(135deg, #e6e0f0, #d0c4e0)',
-                'linear-gradient(135deg, #e0ebe0, #c8dcc8)',
-                'linear-gradient(135deg, #f0e0e0, #e0c8c8)',
-                'linear-gradient(135deg, #e0ebe8, #c8dcd4)'
-            ];
-            hero.style.background = gradients[currentWorkIndex];
 
             const tagsContainer = document.getElementById('workDetailTags');
             tagsContainer.innerHTML = work.tags.map(t => `<span class="work-detail-tag">${t}</span>`).join('');
+
+            document.getElementById('workDetailIntro').textContent = work.intro;
+
+            const highlightsList = document.getElementById('workDetailHighlights');
+            highlightsList.innerHTML = work.highlights.map(h => `<li class="work-detail-highlight-item">${h}</li>`).join('');
+
+            const processList = document.getElementById('workDetailProcess');
+            processList.innerHTML = work.process.map(p => `<li class="work-detail-process-item">${p}</li>`).join('');
+
+            const gallerySection = document.getElementById('workDetailGallerySection');
+            const galleryContainer = document.getElementById('workDetailGallery');
+            if (work.gallery && work.gallery.length > 0) {
+                gallerySection.style.display = '';
+                galleryContainer.innerHTML = work.gallery.map(img =>
+                    `<img src="${img}" alt="${work.title}" class="work-detail-gallery-item" onclick="openLightbox('${img}', '${work.title}')">`
+                ).join('');
+            } else {
+                gallerySection.style.display = 'none';
+            }
 
             document.getElementById('workPrevBtn').disabled = currentWorkIndex === 0;
             document.getElementById('workNextBtn').disabled = currentWorkIndex === works.length - 1;
@@ -1992,6 +2505,111 @@
         // Close work detail on overlay click
         document.getElementById('workDetailOverlay').addEventListener('click', (e) => {
             if (e.target.id === 'workDetailOverlay') closeWorkDetail();
+        });
+
+        // ========== About: 3D Tilt ==========
+        const aboutText = document.querySelector('.about-text');
+        if (aboutText) {
+            const aboutContainer = aboutText.closest('.about-container');
+            aboutContainer.addEventListener('mousemove', (e) => {
+                const rect = aboutContainer.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                aboutText.style.transform = `perspective(800px) rotateY(${x * 4}deg) rotateX(${-y * 3}deg)`;
+            });
+            aboutContainer.addEventListener('mouseleave', () => {
+                aboutText.style.transform = '';
+            });
+        }
+
+        // ========== About: Character-by-character reveal ==========
+        const aboutParagraphs = document.querySelectorAll('.about-text p');
+        aboutParagraphs.forEach((p, pi) => {
+            const text = p.textContent;
+            p.textContent = '';
+            const chars = Array.from(text);
+            chars.forEach((char, ci) => {
+                if (char.trim()) {
+                    const span = document.createElement('span');
+                    span.className = 'word-reveal';
+                    span.textContent = char;
+                    span.style.transitionDelay = `${pi * 0.3 + ci * 0.015}s`;
+                    p.appendChild(span);
+                } else {
+                    p.appendChild(document.createTextNode(char));
+                }
+            });
+        });
+        const wordObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.querySelectorAll('.word-reveal').forEach(w => w.classList.add('visible'));
+                    wordObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+        aboutParagraphs.forEach(p => wordObserver.observe(p));
+
+        // ========== Works: 3D Tilt on work cards ==========
+        document.querySelectorAll('.work-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const rx = (y - rect.height / 2) / 30;
+                const ry = (rect.width / 2 - x) / 30;
+                card.style.transform = `perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-8px)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
+
+        // ========== Philosophy: Mouse parallax floating ==========
+        document.querySelectorAll('.quote-card').forEach((card, i) => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                const depth = (i + 1) * 3;
+                card.style.transform = `translate(${x * depth}px, ${y * depth}px) rotate(${x * 2}deg)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
+
+        // ========== Timeline: Stagger reveal dots ==========
+        const timelineDots = document.querySelectorAll('.timeline-dot');
+        timelineDots.forEach((dot, i) => {
+            dot.style.animationDelay = `${i * 0.1}s`;
+        });
+
+        // ========== Skill bar: click pulse ==========
+        document.querySelectorAll('.skill-bar').forEach(bar => {
+            bar.addEventListener('click', (e) => {
+                const ripple = document.createElement('span');
+                const rect = bar.getBoundingClientRect();
+                ripple.style.cssText = `position:absolute;left:${e.clientX-rect.left}px;top:0;width:4px;height:100%;background:var(--accent-bright);border-radius:2px;pointer-events:none;opacity:0.6;`;
+                bar.appendChild(ripple);
+                ripple.animate([
+                    { transform: 'scaleX(0) translateX(0)', opacity: 0.6 },
+                    { transform: 'scaleX(30) translateX(0)', opacity: 0 }
+                ], { duration: 600, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' });
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // ========== Section title char-by-char hover glow ==========
+        document.querySelectorAll('.section-title').forEach(title => {
+            title.addEventListener('mousemove', (e) => {
+                const rect = title.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width;
+                title.style.textShadow = `${(x - 0.5) * 20}px 0 30px var(--accent-dim)`;
+            });
+            title.addEventListener('mouseleave', () => {
+                title.style.textShadow = '';
+            });
         });
     </script>
 
